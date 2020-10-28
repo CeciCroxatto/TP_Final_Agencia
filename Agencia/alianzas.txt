@@ -1,0 +1,4 @@
+#String nombre (String idAlianza se crea con las primeras 3 letras)
+Oneworld
+SkyTeam
+Star Alliance

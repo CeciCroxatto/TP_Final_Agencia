@@ -1,0 +1,8 @@
+# String idLAerea, String nombre, String idAlianza (primeras 3 letras)
+# idLAerea: https://www.iata.org/en/publications/directories/code-search/
+# idAlianza: https://www.infoviajera.com/2015/08/listado-de-alianzas-de-aerolineas-actualizado/
+AR,Aerolíneas Argentinas,Sky
+AA,American Airlines,One
+LA,Latam,One
+AN,Air New Zealand,Sta
+LR,Lufthansa Regional,Sta

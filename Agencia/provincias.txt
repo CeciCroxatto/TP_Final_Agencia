@@ -1,0 +1,25 @@
+#String idProv, String descripcion
+CBA,Ciudad Autonoma BA
+BA,Buenos Aires
+CAT,Catamarca
+CHA,Chaco
+CHU,Chubut
+COR,Cordoba
+CTS,Corrientes
+ER,Entre Rios
+FMS,Formosa
+JUY,Jujuy
+LP,La Pampa
+LR,La Rioja
+MZA,Mendoza
+MSS,Misiones
+NQN,Neuquen
+RN,Rio Negro
+STA,Salta
+SJ,San Juan
+SL,San Luis
+SC,Santa Cruz
+SF,Santa Fe
+SE,Santiago del Estero
+TF,Tierra del Fuego
+TUC,Tucuman

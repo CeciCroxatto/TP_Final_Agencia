@@ -20,7 +20,7 @@ public class PropertiesUtil {
 	
 	public PropertiesUtil() throws FileNotFoundException, IOException 
 	{
-		properties.load(new FileReader("config.properties"));
+		properties.load(new FileReader("C:\\Users\\Ceci\\git\\TP_Final_Agencia\\Agencia\\config.properties"));
 //		System.out.println(properties);
 	}
 	
@@ -79,6 +79,24 @@ public class PropertiesUtil {
 
 	public static void setProperties(Properties properties) {
 		PropertiesUtil.properties = properties;
+	}
+		
+	
+	
+	public static String url() {
+		return properties.getProperty("url");
+	}
+
+	public static String driver() {
+		return properties.getProperty("driver");
+	}
+	
+	public static String user() {
+		return properties.getProperty("user");
+	}
+
+	public static String password() {
+		return properties.getProperty("password");
 	}
 		
 }

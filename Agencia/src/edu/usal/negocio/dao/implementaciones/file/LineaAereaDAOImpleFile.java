@@ -67,7 +67,8 @@ public class LineaAereaDAOImpleFile implements LineaAereaDAO {
 		lString.add("# String idLAerea, String nombre, String idAlianza (primeras 3 letras)");
 		lString.add("# idLAerea: https://www.iata.org/en/publications/directories/code-search/");
 		lString.add("# idAlianza: https://www.infoviajera.com/2015/08/listado-de-alianzas-de-aerolineas-actualizado/");
-		
+		lString.add("# INSERT INTO LineaAerea VALUES('AR','Aerolíneas Argentinas','Sky')");
+			
 		for (LineaAerea la : lLineaAereas) {
 			
 			lString.add(la.getIdLAerea() + "," + la.getNombre() 

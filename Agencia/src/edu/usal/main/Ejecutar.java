@@ -20,38 +20,48 @@ public class Ejecutar {
 		FormaDePagoController formaDPContr = new FormaDePagoController();
 		
 		ClienteController clientContr = new ClienteController();
-		LineaAereaController lineaAContr = new LineaAereaController();
+		LineaAereaController lineaAContr = new LineaAereaController(alianContr);
 		VueloController vueloContr = new VueloController();
 		VentaController ventaContr = new VentaController();
 	
-		
+		// de FILE
 		provContr.cargarProvincias("file");
-		provContr.imprimirListaProvincias();
+//		provContr.imprimirListaProvincias();
 		alianContr.cargarAlianzas("file");
 		alianContr.imprimirListaAlianzas();
 		
+		// Hardcodeados
 		telefContr.cargarTelefonos();
 		pasajFContr.cargarPasajerosFrecuentes();
 		pasapContr.cargarPasaportes();
 		direcContr.cargarDirecciones();
-		
 		aeropContr.cargarAeropuertos();
 		formaDPContr.cargarFormaDePagos();
 		
-
-		clientContr.cargarClientes("file",pasapContr,telefContr,pasajFContr,direcContr);
+		// PERSISTIBLES (en Base de Datos)
+		// 1 Cliente FILE
+//		clientContr.cargarClientes("file",pasapContr,telefContr,pasajFContr,direcContr);
 //		clientContr.imprimirListaClientes();
-		clientContr.guardarClientes("file");
+//		clientContr.guardarClientes("file");
+		// 1 Cliente DB
+		
 				
-		lineaAContr.cargarLineaAereas("file",alianContr);
-		lineaAContr.guardarLineaAereas("file");
+		//2 Lineas Aereas		
+		lineaAContr.cargarLineaAereas("file");
+//		lineaAContr.guardarLineaAereas("file");	
+//		lineaAContr.cargarLineaAereas("SQL",alianContr);
+//		lineaAContr.guardarLineaAereas("SQL");	
+//		lineaAContr.guardarNuevaLineaAerea(lineaAContr.conseguirLineaAerea("AA"));
 		
-		vueloContr.cargarVuelos("file",aeropContr,lineaAContr);
-		vueloContr.guardarVuelos("file");
+		//3 Vuelos
+//		vueloContr.cargarVuelos("file",aeropContr,lineaAContr);
+//		vueloContr.guardarVuelos("file");
 		
-		ventaContr.cargarVentas("file", clientContr, vueloContr, formaDPContr);
-		ventaContr.guardarVentas("file");
+		//4 Ventas
+//		ventaContr.cargarVentas("file", clientContr, vueloContr, formaDPContr);
+//		ventaContr.guardarVentas("file");
 		
+
 		
 	}
 

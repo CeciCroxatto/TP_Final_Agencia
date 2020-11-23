@@ -36,6 +36,25 @@ public class Cliente {
 		this.direccion = new Direccion();
 	}
 
+	
+	public Cliente(int idCliente, String nombre, String apellido, String dni, 
+			Pasaporte pasaporte,
+			String cuil, Date fechNac, String email,
+			Telefono telefono, PasajeroFrecuente pasajeroFrecuente, Direccion direccion) {
+		this.idCliente = idCliente;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.dni = dni;
+		this.pasaporte = pasaporte;
+		this.cuil = cuil;
+		this.fechNac = fechNac;
+		this.email = email;
+		this.telefono = telefono;
+		this.pasajeroFrecuente = pasajeroFrecuente;
+		this.direccion = direccion;
+	}
+	
+	
 
 	public String getNombre() {
 		return nombre;

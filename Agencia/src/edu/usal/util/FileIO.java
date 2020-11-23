@@ -38,7 +38,7 @@ public class FileIO {
 			prop = new PropertiesUtil();
 
 		} catch (IOException e) {
-			IOGeneral.println("Error 1:" + e.toString());
+			IOGeneral.println("Error 1: " + e.toString());
 		}
 		
 		List<String> lString = new ArrayList();
@@ -60,7 +60,7 @@ public class FileIO {
 			}
 			
 		}catch (Exception e) {
-			IOGeneral.println("Error 2:" + e.toString());
+			IOGeneral.println("Error 2: " + e.toString());
 		}
 		
 		return lString;

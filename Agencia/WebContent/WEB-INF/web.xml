@@ -13,6 +13,36 @@
     <servlet-name>LineaAereaServlet</servlet-name>
     <url-pattern>/LineaAereaServlet</url-pattern>
   </servlet-mapping> 
+
+
+ <servlet>
+    <servlet-name>ClienteServlet</servlet-name>
+    <servlet-class>edu.usal.controller.ClienteController</servlet-class>
+  </servlet>
+ <servlet-mapping>
+    <servlet-name>ClienteServlet</servlet-name>
+    <url-pattern>/ClienteServlet</url-pattern>
+  </servlet-mapping> 
+
+
+ <servlet>
+    <servlet-name>VueloServlet</servlet-name>
+    <servlet-class>edu.usal.controller.VueloController</servlet-class>
+  </servlet>
+ <servlet-mapping>
+    <servlet-name>VueloServlet</servlet-name>
+    <url-pattern>/VueloServlet</url-pattern>
+  </servlet-mapping> 
+
+
+ <servlet>
+    <servlet-name>VentaServlet</servlet-name>
+    <servlet-class>edu.usal.controller.VentaController</servlet-class>
+  </servlet>
+ <servlet-mapping>
+    <servlet-name>VentaServlet</servlet-name>
+    <url-pattern>/VentaServlet</url-pattern>
+  </servlet-mapping>
   
     
   	<welcome-file-list>

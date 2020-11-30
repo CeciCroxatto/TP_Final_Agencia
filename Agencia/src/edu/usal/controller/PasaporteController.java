@@ -35,7 +35,7 @@ public class PasaporteController {
 		Date date1 = Calendar.getInstance().getTime();
 		date1.setDate(02); //dia
 		date1.setMonth(3-1);//mes
-		date1.setYear(2010);
+		date1.setYear(2000);
 		Date date11 = Calendar.getInstance().getTime();
 		date11.setDate(date1.getDate());
 		date11.setMonth(date1.getMonth());
@@ -48,7 +48,7 @@ public class PasaporteController {
 		Date date2 = Calendar.getInstance().getTime();
 		date2.setDate(13); //dia
 		date2.setMonth(2-1);//mes
-		date2.setYear(2012);
+		date2.setYear(2000);
 		Date date21 = Calendar.getInstance().getTime();
 		date21.setDate(date2.getDate());
 		date21.setMonth(date2.getMonth());
@@ -61,7 +61,7 @@ public class PasaporteController {
 		Date date3 = Calendar.getInstance().getTime();
 		date3.setDate(20); //dia
 		date3.setMonth(8-1);//mes
-		date3.setYear(2013);
+		date3.setYear(2000);
 		Date date31 = Calendar.getInstance().getTime();
 		date31.setDate(date3.getDate());
 		date31.setMonth(date3.getMonth());
@@ -72,7 +72,7 @@ public class PasaporteController {
 		Date date4 = Calendar.getInstance().getTime();
 		date4.setDate(20); //dia
 		date4.setMonth(8-1);//mes
-		date4.setYear(2014);
+		date4.setYear(2000);
 		Date date41 = Calendar.getInstance().getTime();
 		date41.setDate(date4.getDate());
 		date41.setMonth(date4.getMonth());
@@ -83,7 +83,7 @@ public class PasaporteController {
 		Date date5 = Calendar.getInstance().getTime();
 		date5.setDate(05); //dia
 		date5.setMonth(8-1);//mes
-		date5.setYear(2015);
+		date5.setYear(2000);
 		Date date51 = Calendar.getInstance().getTime();
 		date51.setDate(date5.getDate());
 		date51.setMonth(date5.getMonth());
@@ -94,7 +94,7 @@ public class PasaporteController {
 		Date date6 = Calendar.getInstance().getTime();
 		date6.setDate(23); //dia
 		date6.setMonth(2-1);//mes
-		date6.setYear(2016);
+		date6.setYear(2000);
 		Date date61 = Calendar.getInstance().getTime();
 		date61.setDate(date6.getDate());
 		date61.setMonth(date6.getMonth());
@@ -116,6 +116,33 @@ public class PasaporteController {
 		return null;
 	}
 
+	
+	
+	public Date conseguirFechaDeEmision(String nroPasaporte) {
+
+		cargarPasaportes();
+		
+		for (Pasaporte pasaporte : this.lPasaportes) {
+			if (pasaporte.getnroPasaporte().equals(nroPasaporte)) {
+				return pasaporte.getFechEmision();
+			}
+		}
+		return null;
+	
+	}
+	
+	public Date conseguirFechaDeVencimiento(String nroPasaporte) {
+
+		cargarPasaportes();
+		
+		for (Pasaporte pasaporte : this.lPasaportes) {
+			if (pasaporte.getnroPasaporte().equals(nroPasaporte)) {
+				return pasaporte.getVencimiento();
+			}
+		}
+		return null;
+	
+	}
 	
 	
 }

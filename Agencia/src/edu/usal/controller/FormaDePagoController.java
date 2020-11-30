@@ -40,10 +40,10 @@ private List<FormaDePago> lFormaDePagos = null;
 		this.lFormaDePagos = new ArrayList();		
 		
 		this.lFormaDePagos.add( new FormaDePago(0,"Efectivo"));
-		this.lFormaDePagos.add( new TarjetaCredito(1,"Tarjeta de Credito",3));
-		this.lFormaDePagos.add( new TarjetaCredito(2,"Tarjeta de Credito",6));
-		this.lFormaDePagos.add( new TarjetaCredito(3,"Tarjeta de Credito",9));
-		this.lFormaDePagos.add( new TarjetaCredito(4,"Tarjeta de Credito",12));
+		this.lFormaDePagos.add( new TarjetaCredito(3,"Tarjeta de Credito",3));
+		this.lFormaDePagos.add( new TarjetaCredito(6,"Tarjeta de Credito",6));		
+		this.lFormaDePagos.add( new TarjetaCredito(12,"Tarjeta de Credito",12));
+		this.lFormaDePagos.add( new TarjetaCredito(24,"Tarjeta de Credito",24));
 	}
 	
 	
@@ -55,6 +55,21 @@ private List<FormaDePago> lFormaDePagos = null;
 			}
 		}
 		return null;
+	}
+	
+	public double FactorDeInteres(int idPago) {
+		
+		double factorDeInteres = -9;
+		
+				
+		if(idPago > 6) {
+			factorDeInteres = 1.1;
+		}else {
+			factorDeInteres = 1;
+		}
+		
+		return factorDeInteres;
+		
 	}
 	
 

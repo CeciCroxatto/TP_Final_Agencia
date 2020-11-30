@@ -44,6 +44,14 @@ public ConnectionDB() {
 		try {
 			System.out.println("...Conectando al DB");
 			con = DriverManager.getConnection(url, prop.user(), prop.password());
+			
+//			try {
+//				Thread.sleep(8000);
+//			}catch(InterruptedException e){
+//				System.out.println("ERROR EN EL THREAD");
+//				e.printStackTrace();
+//			}
+			
 			System.out.println("Conexion exitosa");
 		} catch (SQLException e) {
 			System.out.println("Error al conectarme a la DB: "+e);

@@ -36,6 +36,10 @@ public class FormaDePago {
 	//public abstract void CalcularGradoDesgaste();
 	
 	//public void RegistrarAlquiler(…)){
+	
+	
+
+	
 
 	
 

@@ -22,6 +22,7 @@ public class LineaAereaController extends HttpServlet {
 	private AlianzaController alianContr;
 
 	public LineaAereaController() {
+		this.lLineaAereas = new ArrayList<LineaAerea>();
 		this.alianContr = new AlianzaController();
 	}
 
@@ -41,7 +42,8 @@ public class LineaAereaController extends HttpServlet {
 	public void cargarLineaAereas(String implementacion) {
 
 		LineaAereaDAO lineaAereaDAO = LineaAereaFactory.getImplementacion(implementacion);
-
+		this.alianContr = new AlianzaController();
+		this.alianContr.cargarAlianzas("file");
 		this.lLineaAereas = lineaAereaDAO.cargarLineaAereas(this.alianContr);
 
 		// de tabla parametrica
@@ -55,6 +57,10 @@ public class LineaAereaController extends HttpServlet {
 
 	}
 
+	
+	
+	
+	
 	public int crearLineaAerea(LineaAerea lineaAerea) {
 
 		LineaAereaDAOImpleSQL lineaAereaDAOImpleSQL = new LineaAereaDAOImpleSQL();
@@ -114,10 +120,10 @@ public class LineaAereaController extends HttpServlet {
 		case "Baja":
 			formularioBaja_por_ID(request, response);
 			break;
-		case "Consultar":
+		case "Consulta":
 			formulario_de_consulta(request, response);
 			break;
-		case "Modificar":
+		case "Modificacion":
 			formulario_de_modificacion(request, response);
 			break;
 
@@ -150,6 +156,7 @@ public class LineaAereaController extends HttpServlet {
 
 			// public LineaAerea(String idLAerea, String nombre, Alianza alianza)
 			LineaAerea LineaAereaNueva = new LineaAerea(idLAerea, nombre, alianza);
+			registrosAlterados = -20;
 			registrosAlterados = crearLineaAerea(LineaAereaNueva);
 			if (registrosAlterados > 0) {
 				response.getWriter().append("Linea Aerea guardada en la Base correctamente").println();
@@ -168,7 +175,8 @@ public class LineaAereaController extends HttpServlet {
 //				LineaAerea lineaAereaBajar = conseguirLineaAerea(idLAerea);
 //				response.getWriter().append("Nombre Linea Aerea =");
 //				response.getWriter().append(lineaAereaBajar.getNombre()).println();
-
+			
+			registrosAlterados = -20;
 			registrosAlterados = bajarLineaAerea(idLAerea);
 			if (registrosAlterados > 0) {
 				response.getWriter().append("Linea Aerea dada de baja de la Base correctamente").println();
@@ -186,42 +194,73 @@ public class LineaAereaController extends HttpServlet {
 			response.getWriter().append("<a href=Inicio.html>Volver al Inicio</a>").println();
 			break;
 
+			
+			
+			
+			
+			
 		case "Modificar":
-			idLAerea = request.getParameter("idLAerea");
-			texto = consultarLineaAerea(idLAerea);
-
-			int idExiste = -4;
-			idExiste = verificarID(idLAerea);
-			if (idExiste == 1) {
-				formulario_de_modificacion2(request, response, idLAerea);
-			} else {
-				response.getWriter().append("No se pudo ejecutar la operación").println();
-				response.getWriter().append("No existe una Linea Aerea con ese Código.").println();
-				response.getWriter().append("<a href=Inicio.html>Volver al Inicio</a>").println();
-			}
-			break;
-		case "Guardar datos":
+//			int idExiste = -4;
+//			idExiste = verificarID(idLAerea);
+//			if (idExiste == -4) {
+//				formulario_de_modificacion2(request, response);
+//			} else {
+//				response.getWriter().append("No se pudo ejecutar la operación" + idExiste).println();
+//				response.getWriter().append("No existe una Linea Aerea con ese Código.").println();
+//				response.getWriter().append("<a href=Inicio.html>Volver al Inicio</a>").println();
+//			}
+			
+			
 			idLAerea = request.getParameter("idLAerea");
 			nombre = request.getParameter("nombre");
 			idAlianza = request.getParameter("idAlianza");
 			String estado = request.getParameter("estado");
-			int estadoBoolean = -3;
-			if (estado == "Activo") {
+			int estadoBoolean = -33;
+			if (estado.matches("activo")) {
 				estadoBoolean = 1;
 			} else {
-				if (estado == "Inactivo")
+				if (estado.matches("inactivo"))
 					estadoBoolean = 0;
 			}
-
+			
+			registrosAlterados = -20;
 			registrosAlterados = modificarLineaAerea(idLAerea, nombre, idAlianza, estadoBoolean);
 
 			if (registrosAlterados > 0) {
 				response.getWriter().append("Datos actualizados en la Base correctamente").println();
 			} else {
-				response.getWriter().append("No se pudo ejecutar la operación").println();
+				response.getWriter().append("No existe Linea Aerea con ese ID").println();
 			}
 			response.getWriter().append("<a href=Inicio.html>Volver al Inicio</a>").println();
+			
 			break;
+			
+			
+//			
+//		case "Guardar datos":
+//			idLAerea = (String) request.getAttribute("idLAerea");
+//			System.out.println("IDLAEREA = " + idLAerea);
+////			idLAerea = request.getParameter("idLAerea");
+//			nombre = request.getParameter("nombre");
+//			idAlianza = request.getParameter("idAlianza");
+//			String estado = request.getParameter("estado");
+//			int estadoBoolean = -33;
+//			if (estado.matches("activo")) {
+//				estadoBoolean = 1;
+//			} else {
+//				if (estado.matches("inactivo"))
+//					estadoBoolean = 0;
+//			}
+//
+//			registrosAlterados = modificarLineaAerea(idLAerea, nombre, idAlianza, estadoBoolean);
+//
+//			if (registrosAlterados > 0) {
+//				response.getWriter().append("Datos actualizados en la Base correctamente").println();
+//			} else {
+//				response.getWriter().append("No se pudo ejecutar la operación" + registrosAlterados).println();
+//			}
+//			response.getWriter().append("<a href=Inicio.html>Volver al Inicio</a>").println();
+//			break;
 
 		}
 	}
@@ -272,8 +311,7 @@ public class LineaAereaController extends HttpServlet {
 		out.append("</td>");
 		out.append("<td>");
 		out.append("<input type=\"text\" id=\"2\" placeholder=\"Ingresar Nombre\"");
-		out.append(
-				"name=\"nombre\" pattern=\"^[a-zA-Z0-9\\s]{50}$\" title=\"Hasta 50 caracteres alfanumericos\" required>");
+		out.append("name=\"nombre\" pattern=\"^[a-zA-Z0-9\\s]{1,50}$\" title=\"Hasta 50 caracteres alfanumericos\" required>");
 		out.append("</td>");
 		out.append("</tr>");
 		out.append("<tr>");
@@ -464,68 +502,22 @@ public class LineaAereaController extends HttpServlet {
 		out.append("</td>");
 		out.append("</tr>");
 
-		out.append("<tr>");
-		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Modificar\">");
-		out.append("</th>");
-		out.append("</tr>");
-		out.append("</table>");
-		out.append("</article>");
-		out.append("</form>");
-		out.append("<a href=Inicio.html>Volver al Inicio</a>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("</body>");
-		out.append("</html>");
-
-	}
-
-	public void formulario_de_modificacion2(HttpServletRequest request, HttpServletResponse response, String idLAerea)
-			throws ServletException, IOException {
-
-		PrintWriter out = response.getWriter();
-		out.append("<!DOCTYPE html>");
-		out.append("<head>");
-		out.append("<meta charset= \"utf-8\">");
-		out.append("<title>Modificacion de Linea Aerea</title>");
-		out.append("</head>");
-		out.append("<body>");
-		out.append("<article class=\"Titulo\">");
-		out.append("<h1>");
-		out.append("<i>");
-		out.append("<u>");
-		out.append("<b>Modificacion de Linea Aerea</b>");
-		out.append("</u>");
-		out.append("</i>");
-		out.append("</h1>");
-		out.append("</article>");
-		out.append("<hr>");
-//		out.append("<article class=\"FormularioAltaLineaAerea\">");
-		out.append("<article>");
-		out.append("<form action=\"LineaAereaServlet\" method=\"post\">");
-		out.append("<article class=\"Tabla\">");
-		out.append("<table border=\"1\">");
-		out.append("<tr>");
-		out.append("<th colspan=\"2\">");
-		out.append("<b>Modificacion de Linea Aerea</b>");
-		out.append("</th>");
-		out.append("<tr>");
-		out.append("<tr>");
-
-		out.append("</tr>");
-		out.append("<tr>");
+		
+		
+		
 		out.append("<td>");
-		out.append("<label for=\"1\"> Nombre: </label>");
+		out.append("<label for=\"2\"> Nombre: </label>");
 		out.append("</td>");
 		out.append("<td>");
-		out.append(
-				"name=\"nombre\" pattern=\"^[a-zA-Z0-9\\s]{50}$\" title=\"Hasta 50 caracteres alfanumericos\" required>");
-		out.append("name=\"nombre\" required>");
+
+		out.append("<input type=\"text\" id=\"2\" placeholder=\"Ingresar Nombre\"");
+		out.append("name=\"nombre\" pattern=\"^[a-zA-Z0-9\\s]{1,50}$\" title=\"Hasta 50 caracteres alfanumericos\" required>");
+		
 		out.append("</td>");
 		out.append("</tr>");
 		out.append("<tr>");
 		out.append("<td>");
-		out.append("<label for=\"2\">Alianza: </label>");
+		out.append("<label for=\"3\">Alianza: </label>");
 		out.append("</td>");
 		out.append("<td>");
 //out.append("<input type=\"text\" id=\"3\" placeholder=\"Ingresar idAlianza\"name=\"idAlianza\" required>");
@@ -546,16 +538,20 @@ public class LineaAereaController extends HttpServlet {
 		out.append("</tr>");
 
 		out.append("<td>");
-		out.append("<label for=\"3\">Estado: </label>");
+		out.append("<label for=\"4\">Estado: </label>");
 		out.append("</td>");
 		out.append("<td>");
-		out.append("<input name=\"estado\" type=radio> Activo");
-		out.append("<input name=\"estado\" type=radio> Inactivo");
+		out.append("<input type=radio name=\"estado\" value=\"activo\" required> Activo");
+		out.append("<input type=radio name=\"estado\" value=\"inactivo\"> Inactivo");
 		out.append("</td>");
-
+		
+		
+		
+		
+		
 		out.append("<tr>");
 		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Guardar datos\">");
+		out.append("<input type=\"submit\"name=\"boton\" value=\"Modificar\">");
 		out.append("</th>");
 		out.append("</tr>");
 		out.append("</table>");
@@ -566,7 +562,97 @@ public class LineaAereaController extends HttpServlet {
 		out.append("<hr>");
 		out.append("</body>");
 		out.append("</html>");
+
 	}
+//
+//	public void formulario_de_modificacion2(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//
+//		PrintWriter out = response.getWriter();
+//		out.append("<!DOCTYPE html>");
+//		out.append("<head>");
+//		out.append("<meta charset= \"utf-8\">");
+//		out.append("<title>Modificacion de Linea Aerea</title>");
+//		out.append("</head>");
+//		out.append("<body>");
+//		out.append("<article class=\"Titulo\">");
+//		out.append("<h1>");
+//		out.append("<i>");
+//		out.append("<u>");
+//		out.append("<b>Modificacion de Linea Aerea</b>");
+//		out.append("</u>");
+//		out.append("</i>");
+//		out.append("</h1>");
+//		out.append("</article>");
+//		out.append("<hr>");
+////		out.append("<article class=\"FormularioAltaLineaAerea\">");
+//		out.append("<article>");
+//		out.append("<form action=\"LineaAereaServlet\" method=\"post\">");
+//		out.append("<article class=\"Tabla\">");
+//		out.append("<table border=\"1\">");
+//		out.append("<tr>");
+//		out.append("<th colspan=\"2\">");
+//		out.append("<b>Modificacion de Linea Aerea</b>");
+//		out.append("</th>");
+//		out.append("<tr>");
+//		out.append("<tr>");
+//
+//		out.append("</tr>");
+//		out.append("<tr>");
+//		out.append("<td>");
+//		out.append("<label for=\"1\"> Nombre: </label>");
+//		out.append("</td>");
+//		out.append("<td>");
+//
+//		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar Nombre\"");
+//		out.append("name=\"nombre\" pattern=\"^[a-zA-Z0-9\\s]{1,50}$\" title=\"Hasta 50 caracteres alfanumericos\" required>");
+//		
+//		out.append("</td>");
+//		out.append("</tr>");
+//		out.append("<tr>");
+//		out.append("<td>");
+//		out.append("<label for=\"2\">Alianza: </label>");
+//		out.append("</td>");
+//		out.append("<td>");
+////out.append("<input type=\"text\" id=\"3\" placeholder=\"Ingresar idAlianza\"name=\"idAlianza\" required>");
+//		out.append("<select name=\"idAlianza\">");
+//
+//		this.alianContr = new AlianzaController();
+//		this.alianContr.cargarAlianzas("file");
+//
+//		for (Alianza alianzaM : this.alianContr.getlAlianzas()) {
+//			out.append("<option value=\"");
+//			out.append(alianzaM.getIdAlianza());
+//			out.append("\">");
+//			out.append(alianzaM.getIdAlianza());
+//		}
+//
+//		out.append("</select>");
+//		out.append("</td>");
+//		out.append("</tr>");
+//
+//		out.append("<td>");
+//		out.append("<label for=\"3\">Estado: </label>");
+//		out.append("</td>");
+//		out.append("<td>");
+//		out.append("<input type=radio name=\"estado\" value=\"activo\" required> Activo");
+//		out.append("<input type=radio name=\"estado\" value=\"inactivo\"> Inactivo");
+//		out.append("</td>");
+//
+//		out.append("<tr>");
+//		out.append("<th colspan=\"2\" align=\"CENTER\">");
+//		out.append("<input type=\"submit\"name=\"boton\" value=\"Guardar datos\">");
+//		out.append("</th>");
+//		out.append("</tr>");
+//		out.append("</table>");
+//		out.append("</article>");
+//		out.append("</form>");
+//		out.append("<a href=Inicio.html>Volver al Inicio</a>");
+//		out.append("</article>");
+//		out.append("<hr>");
+//		out.append("</body>");
+//		out.append("</html>");
+//	}
 
 	public void modificacion(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

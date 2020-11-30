@@ -32,10 +32,7 @@ public class TarjetaCredito extends FormaDePago{
 	
 	
 	
-	public double CalcularInteres() {
-		
-		return 1.1;
-	}
+
 	
 
 }

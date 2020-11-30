@@ -7,6 +7,7 @@ import java.util.List;
 import edu.usal.util.ConnectionDB;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -21,14 +22,11 @@ import edu.usal.controller.PasaporteController;
 import edu.usal.controller.TelefonoController;
 import edu.usal.negocio.dao.interfaces.ClienteDAO;
 
-
-
 public class ClienteDAOImpleSQL implements ClienteDAO {
 
 	@Override
-	public List<Cliente> cargarClientes(PasaporteController pasapContr
-			, TelefonoController telefContr, PasajeroFrecuenteController pasajFContr
-			, DireccionController direcContr) {
+	public List<Cliente> cargarClientes(PasaporteController pasapContr, TelefonoController telefContr,
+			PasajeroFrecuenteController pasajFContr, DireccionController direcContr) {
 
 		ArrayList<Cliente> listaClientes = new ArrayList<>();
 		ResultSet res;
@@ -37,7 +35,6 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 		PasajeroFrecuente pasajeroFrecuente = null;
 		Direccion direccion = null;
 
-		
 		try (Connection db = ConnectionDB.getConnection();
 				Statement q = db.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			res = q.executeQuery("Select * from Cliente");
@@ -52,10 +49,9 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 //						Pasaporte pasaporte,
 //						String cuil, Date fechNac, String email,
 //						Telefono telefono, PasajeroFrecuente pasajeroFrecuente, Direccion direccion)
-				listaClientes.add(new Cliente(res.getInt("IDCLIENTE"), res.getString("NOMBRE"), res.getString("APELLIDO"), res.getString("DNI"),
-											pasaporte,
-											res.getString("CUIL"), res.getDate("FECNAC"), res.getString("MAIL"),
-											telefono, pasajeroFrecuente, direccion));
+				listaClientes.add(new Cliente(res.getInt("IDCLIENTE"), res.getString("NOMBRE"),
+						res.getString("APELLIDO"), res.getString("DNI"), pasaporte, res.getString("CUIL"),
+						res.getDate("FECNAC"), res.getString("MAIL"), telefono, pasajeroFrecuente, direccion));
 			}
 			res.close();
 
@@ -68,28 +64,123 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 
 	}
 
-	
-	
 	@Override
 	public void guardarClientes(List<Cliente> lClientes) {
+//
+//		Connection con = ConnectionDB.getConnection();
+//		Statement stm = null;
+//
+//		try {
+//			con.setAutoCommit(false);
+//
+//			stm = con.createStatement();
+//			// para que borre la base
+//			stm.executeUpdate("DELETE FROM Cliente");
+//
+//			for (Cliente cliente : lClientes) {
+//				stm.executeUpdate("INSERT INTO Cliente VALUES('" 
+//						+ cliente.getIdLAerea() + "','"
+//						+ cliente.getNombre() + "','" 
+//						+ cliente.getAlianza().getNombre() + "')");
+//			}
+//			con.commit();
+//
+//		} catch (SQLException e) {
+//
+//			e.printStackTrace();
+//			try {
+//				ConnectionDB.RollBack(con);
+//			} catch (Exception e2) {
+//				e2.printStackTrace();
+//			}
+//
+//		}
+
+	}
+
+	public String nroPasaporte_por_CUIL(String cuil) {
+
+		// con el cuil en la base consigo el numero de pasaporte
+		ResultSet res = null;
+		String pasaporte_id = null;
+
+		try (Connection con = ConnectionDB.getConnection();
+				Statement stm = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
+
+			con.setAutoCommit(false);
+
+			res = stm.executeQuery("Select * from Cliente where CUIL = '" + cuil + "'");
+
+			while (res.next()) {
+
+				if (res != null) {
+
+					pasaporte_id = res.getString("PASAPORTE_ID");
+				}
+			}
+
+			res.close();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+
+			System.out.println("No se pudo conectar a la base ");
+			e.printStackTrace();
+			try {
+//				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return pasaporte_id;
+
+	}
+
+	public int crearCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
+			String fechNac, String email, int idTelefono, String nroPF, int idDireccion) {
 
 		Connection con = ConnectionDB.getConnection();
-		Statement stm = null;
+		CallableStatement cst = null;
+		int registrosAlterados = -302;
 
 		try {
 			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_CrearCliente ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?");
+			cst.setString(1, nombre);
+			cst.setString(2, apellido);
+			cst.setString(3, dni);
+			cst.setString(4, cuil);
+			cst.setString(5, nroPasaporte);
+			// pasarle mes primero, separados guiones, todo entre comilla simple
+//			String fechaS = "'" + (fechNac.getMonth()+1) +  "-"
+//						+ fechNac.getDay() + "-" + fechNac.getYear() +"'";
+			String fechaS = fechNac;
+			cst.setString(6, fechaS);
+			cst.setInt(7, idTelefono);
+			cst.setString(8, nroPF);
+			cst.setString(9, email);
+			cst.setInt(10, idDireccion);
 
-			stm = con.createStatement();
-			// para que borre la base
-			stm.executeUpdate("DELETE FROM Cliente");
-
-			for (Cliente cliente : lClientes) {
-				stm.executeUpdate("INSERT INTO Cliente VALUES('" 
-						+ cliente.getIdLAerea() + "','"
-						+ cliente.getNombre() + "','" 
-						+ cliente.getAlianza().getNombre() + "')");
+			try {
+				registrosAlterados = cst.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					cst.close();
+					ConnectionDB.RollBack(con);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
 			}
+
 			con.commit();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -101,6 +192,147 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 			}
 
 		}
+
+		return registrosAlterados;
+
+	}
+
+	public int bajarCliente(String cuil) {
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		int registrosAlterados = -22;
+
+		try {
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_BajaLogicaCliente ?");
+
+			cst.setString(1, cuil);
+
+			try {
+				registrosAlterados = cst.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					cst.close();
+					ConnectionDB.RollBack(con);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+
+			con.commit();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return registrosAlterados;
+
+	}
+
+	public String consultarCliente(String cuil) {
+
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		ResultSet res = null;
+		String texto = "No se encontro un Cliente con ese CUIL";
+
+		try {
+
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_ConsultarCliente ?");
+			cst.setString(1, cuil);
+
+			res = cst.executeQuery();
+
+			while (res.next()) {
+
+				if (res != null) {
+
+					texto = "Nombre: " + res.getString("NOMBRE") + "<br>" + " Apellido: " + res.getString("APELLIDO")
+							+ "<br>" + "DNI: " + res.getString("DNI") + "<br>" + "CUIL: " + res.getString("CUIL")
+							+ "<br>" + "<br>";
+				}
+			}
+
+			res.close();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return texto;
+	}
+
+	public int modificarCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
+			String fechaS, String email, int idTelefono, String nroPF, int idDireccion) {
+
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		int registrosAlterados = -13;
+
+		try {
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_ModificarCliente ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?");
+			cst.setString(1, nombre);
+			cst.setString(2, apellido);
+			cst.setString(3, dni);
+			cst.setString(4, cuil);
+			cst.setString(5, nroPasaporte);
+			cst.setString(6, fechaS);
+			cst.setInt(7, idTelefono);
+			cst.setString(8, nroPF);
+			cst.setString(9, email);
+			cst.setInt(10, idDireccion);
+
+			try {
+				registrosAlterados = cst.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					cst.close();
+					ConnectionDB.RollBack(con);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+
+			con.commit();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return registrosAlterados;
 
 	}
 

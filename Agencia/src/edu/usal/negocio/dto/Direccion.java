@@ -14,7 +14,7 @@ public class Direccion {
 	}
 
 	public Direccion(int idDireccion, String calle, String altura, String ciudad, Pais pais, String cp) {
-		
+
 		this.idDireccion = idDireccion;
 		this.calle = calle;
 		this.altura = altura;
@@ -23,8 +23,6 @@ public class Direccion {
 		this.cp = cp;
 	}
 
-	
-	
 	public int getIdDireccion() {
 		return idDireccion;
 	}
@@ -56,7 +54,6 @@ public class Direccion {
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}
-
 
 	public Pais getPais() {
 		return pais;

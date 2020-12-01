@@ -1,21 +1,20 @@
 package edu.usal.negocio.dto;
 
 public class PasajeroFrecuente {
-	
+
 	private String nroPF;
 	private LineaAerea lineaAerea;
 	private String categoria;
-	
+
 	public PasajeroFrecuente() {
 
 	}
-	
+
 	public PasajeroFrecuente(String nroPF, LineaAerea lineaAerea, String categoria) {
 		this.nroPF = nroPF;
 		this.lineaAerea = lineaAerea;
 		this.categoria = categoria;
 	}
-
 
 	public LineaAerea getLineaAerea() {
 		return lineaAerea;
@@ -40,8 +39,5 @@ public class PasajeroFrecuente {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
-
-	
-	
 
 }

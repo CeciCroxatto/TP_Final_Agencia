@@ -13,8 +13,6 @@ public class Provincia {
 		this.descripcion = descripcion;
 	}
 
-	
-	
 	public String getIdProv() {
 		return idProv;
 	}
@@ -30,7 +28,5 @@ public class Provincia {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
-	
 
 }

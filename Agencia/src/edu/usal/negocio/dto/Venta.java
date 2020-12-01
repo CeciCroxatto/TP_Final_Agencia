@@ -3,7 +3,7 @@ package edu.usal.negocio.dto;
 import java.util.Date;
 
 public class Venta {
-	
+
 	private int idVenta;
 	private Cliente cliente;
 	private Vuelo vuelo;
@@ -11,13 +11,13 @@ public class Venta {
 	private FormaDePago formaDePago;
 	private double importe_vuelo;
 	private double importe_total;
-	
+
 	public Venta() {
 
 	}
-	
-	public Venta(int idVenta, Cliente cliente, Vuelo vuelo, Date fecha, 
-			FormaDePago formaDePago, double importe_vuelo, double importe_total) {
+
+	public Venta(int idVenta, Cliente cliente, Vuelo vuelo, Date fecha, FormaDePago formaDePago, double importe_vuelo,
+			double importe_total) {
 		this.idVenta = idVenta;
 		this.cliente = cliente;
 		this.vuelo = vuelo;
@@ -82,10 +82,5 @@ public class Venta {
 	public void setImporte_total(double importe_total) {
 		this.importe_total = importe_total;
 	}
-	
-	
-	
-	
-	
 
 }

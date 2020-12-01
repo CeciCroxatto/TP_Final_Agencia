@@ -1,15 +1,15 @@
 package edu.usal.negocio.dto;
 
 public class LineaAerea {
-	
+
 	private String idLAerea;
 	private String nombre;
 	private Alianza alianza;
-	
+
 	public LineaAerea() {
 
 	}
-	
+
 	public LineaAerea(String idLAerea, String nombre, Alianza alianza) {
 		this.idLAerea = idLAerea;
 		this.nombre = nombre;
@@ -39,10 +39,5 @@ public class LineaAerea {
 	public void setAlianza(Alianza alianza) {
 		this.alianza = alianza;
 	}
-	
-	
-	
-	
-	
 
 }

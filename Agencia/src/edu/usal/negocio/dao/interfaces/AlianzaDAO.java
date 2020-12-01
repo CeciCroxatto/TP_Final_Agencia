@@ -4,9 +4,7 @@ import edu.usal.negocio.dto.Alianza;
 
 import java.util.List;
 
-
 public interface AlianzaDAO {
 
-	
 	public List<Alianza> cargarAlianzas();
 }

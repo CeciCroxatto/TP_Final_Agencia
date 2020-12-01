@@ -47,36 +47,6 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 	}
 
-	@Override
-	public void guardarLineaAereas(List<LineaAerea> lLineaAereas) {
-
-//		Connection con = ConnectionDB.getConnection();
-//		Statement stm = null;
-//
-//		try {
-//			con.setAutoCommit(false);
-//			stm = con.createStatement();
-//			// para que borre la base
-//			stm.executeUpdate("DELETE FROM LineaAerea");
-//
-//			for (LineaAerea lineaAerea : lLineaAereas) {
-//				insert(lineaAerea, con, stm);
-//			}
-//			con.commit();
-//
-//		} catch (SQLException e) {
-//
-//			e.printStackTrace();
-//			try {
-//				ConnectionDB.RollBack(con);
-//			} catch (Exception e2) {
-//				e2.printStackTrace();
-//			}
-//
-//		}
-
-	}
-
 	public int crearLineaAerea(LineaAerea lineaAerea) {
 
 		Connection con = ConnectionDB.getConnection();
@@ -157,7 +127,6 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 		ResultSet res = null;
 		String texto = "No se encontro una Linea Aerea con ese ID";
-//		Connection con = null;
 
 		try (Connection con = ConnectionDB.getConnection();
 				Statement stm = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
@@ -179,7 +148,7 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 					texto = "ID: " + res.getString("IDLAEREA") + "<br>" + " Nombre: " + res.getString("NOMBRE") + "<br>"
 							+ "Alianza:" + res.getString("ALIANZA") + "<br>" + "Estado: " + estado + "<br>";
-				} 
+				}
 			}
 
 			res.close();
@@ -197,15 +166,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 				e2.printStackTrace();
 			}
 
-		} 
-//			finally {
-//			res.close();
-//			con.close();
-//			if (con.isClosed())
-//				System.out.println("Conexion cerrada");
-//		}
-		
-		
+		}
+
 		return texto;
 	}
 
@@ -221,20 +183,12 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			res = stm.executeQuery("select * from LineaAerea where IDLAEREA = '" + idLAerea + "'");
 
-			
 			while (res.next()) {
-				
+
 				existe = 1;
 
-//				if ( idLAerea == res.getString("IDLAEREA") ) {
-//
-//					existe = 1;
-//
-//				} else {
-//					existe = 0;
-//				}
 			}
-			
+
 			res.close();
 			con.close();
 			if (con.isClosed())
@@ -257,8 +211,6 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 		Connection con = ConnectionDB.getConnection();
 		Statement stm = null;
 		int registrosAlterados = -13;
-		
-//		System.out.println(nombre + idAlianza + estadoBoolean + idLAerea);
 
 		try {
 			con.setAutoCommit(false);
@@ -267,8 +219,6 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 			registrosAlterados = stm.executeUpdate("update LineaAerea set NOMBRE = '" + nombre + "', " + "ALIANZA = '"
 					+ idAlianza + "', " + "ESTADO = " + estadoBoolean + " where IDLAEREA = '" + idLAerea + "'");
 
-//			registrosAlterados = stm.executeUpdate("update LineaAerea set NOMBRE = 'aaaaaa', ALIANZA = 'Sky', ESTADO = 1 where IDLAEREA = 'AA'");
-	
 			con.commit();
 			con.close();
 			if (con.isClosed())

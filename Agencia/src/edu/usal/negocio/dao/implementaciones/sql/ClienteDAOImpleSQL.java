@@ -1,7 +1,6 @@
 package edu.usal.negocio.dao.implementaciones.sql;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.usal.util.ConnectionDB;
@@ -64,40 +63,6 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 
 	}
 
-	@Override
-	public void guardarClientes(List<Cliente> lClientes) {
-//
-//		Connection con = ConnectionDB.getConnection();
-//		Statement stm = null;
-//
-//		try {
-//			con.setAutoCommit(false);
-//
-//			stm = con.createStatement();
-//			// para que borre la base
-//			stm.executeUpdate("DELETE FROM Cliente");
-//
-//			for (Cliente cliente : lClientes) {
-//				stm.executeUpdate("INSERT INTO Cliente VALUES('" 
-//						+ cliente.getIdLAerea() + "','"
-//						+ cliente.getNombre() + "','" 
-//						+ cliente.getAlianza().getNombre() + "')");
-//			}
-//			con.commit();
-//
-//		} catch (SQLException e) {
-//
-//			e.printStackTrace();
-//			try {
-//				ConnectionDB.RollBack(con);
-//			} catch (Exception e2) {
-//				e2.printStackTrace();
-//			}
-//
-//		}
-
-	}
-
 	public String nroPasaporte_por_CUIL(String cuil) {
 
 		// con el cuil en la base consigo el numero de pasaporte
@@ -149,15 +114,12 @@ public class ClienteDAOImpleSQL implements ClienteDAO {
 
 		try {
 			con.setAutoCommit(false);
-			cst = con.prepareCall("EXEC sp_CrearCliente ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?");
+			cst = con.prepareCall("EXEC sp_CrearCliente ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 			cst.setString(1, nombre);
 			cst.setString(2, apellido);
 			cst.setString(3, dni);
 			cst.setString(4, cuil);
 			cst.setString(5, nroPasaporte);
-			// pasarle mes primero, separados guiones, todo entre comilla simple
-//			String fechaS = "'" + (fechNac.getMonth()+1) +  "-"
-//						+ fechNac.getDay() + "-" + fechNac.getYear() +"'";
 			String fechaS = fechNac;
 			cst.setString(6, fechaS);
 			cst.setInt(7, idTelefono);

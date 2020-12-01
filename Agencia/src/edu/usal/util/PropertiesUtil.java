@@ -9,24 +9,14 @@ import java.util.ArrayList;
 
 import java.util.Properties;
 
-
-
 public class PropertiesUtil {
-	
+
 	private static Properties properties = new Properties();
-//	private static PropertiesUtil objeto = null;
-	
-	
-	
-	public PropertiesUtil() throws FileNotFoundException, IOException 
-	{
+
+	public PropertiesUtil() throws FileNotFoundException, IOException {
 		properties.load(new FileReader("C:\\Users\\Ceci\\git\\TP_Final_Agencia\\Agencia\\config.properties"));
-//		System.out.println(properties);
 	}
-	
-	
-	
-	
+
 	public String classToPath(String clase) {
 
 		boolean bVocal = false;
@@ -61,18 +51,7 @@ public class PropertiesUtil {
 		return pathClase;
 
 	}
-	
-	
-	
-	
-	
-//	public static PropertiesUtil getInstance() throws FileNotFoundException, IOException 
-//	{
-//		if(objeto == null)
-//			objeto = new PropertiesUtil();
-//		return objeto;
-//	}
-	
+
 	public static Properties getProperties() {
 		return properties;
 	}
@@ -80,9 +59,7 @@ public class PropertiesUtil {
 	public static void setProperties(Properties properties) {
 		PropertiesUtil.properties = properties;
 	}
-		
-	
-	
+
 	public static String url() {
 		return properties.getProperty("url");
 	}
@@ -90,7 +67,7 @@ public class PropertiesUtil {
 	public static String driver() {
 		return properties.getProperty("driver");
 	}
-	
+
 	public static String user() {
 		return properties.getProperty("user");
 	}
@@ -98,7 +75,5 @@ public class PropertiesUtil {
 	public static String password() {
 		return properties.getProperty("password");
 	}
-		
+
 }
-
-

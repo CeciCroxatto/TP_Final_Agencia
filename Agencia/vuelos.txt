@@ -1,6 +1,6 @@
 # int idVuelo, String numeroVuelo, int asientosTotales, int asientosDisponibles, String idAeropuerto Salida, String idAeropuerto Llegada, Date fechSalida, Date fechLlegada, String horasVuelo, String idLAerea
 # usando IATA Codes para idAeropuerto , idLAerea: https://www.iata.org/en/publications/directories/code-search/
-1,AA1111,100,10,PMY,RSA,1/1/2011,2/1/2011,01:01,AR
-2,BB2222,200,20,RSA,FLN,2/2/2022,3/1/2022,02:02,AA
-3,CC2222,300,30,ATI,CYR,2/2/2022,3/1/2033,02:02,LA
-4,DD2222,700,70,COR,CYR,2/2/2022,3/1/2044,02:02,LR
+1,AA1111,100,10,PMY,RSA,1/1/-79,2/1/-79,01:01,AR
+2,BB2222,200,20,RSA,FLN,2/1/-79,3/1/-79,02:02,AA
+3,CC2222,300,30,ATI,CYR,2/1/-79,3/1/-79,02:02,LA
+4,DD2222,700,70,COR,CYR,2/1/-79,3/1/-79,02:02,LR

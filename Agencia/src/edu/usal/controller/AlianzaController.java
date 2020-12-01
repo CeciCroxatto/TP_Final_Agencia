@@ -8,19 +8,13 @@ import edu.usal.util.IOGeneral;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class AlianzaController {
 
 	private List<Alianza> lAlianzas = null;
 
-	
-	
 	public AlianzaController() {
 		this.lAlianzas = new ArrayList<Alianza>();
 	}
-	
-	
-	
 
 	public List<Alianza> getlAlianzas() {
 		return lAlianzas;
@@ -30,18 +24,14 @@ public class AlianzaController {
 		this.lAlianzas = lAlianzas;
 	}
 
-
-
-
 	public void cargarAlianzas(String implementacion) {
 
 		AlianzaDAO AlianzaDAO = AlianzaFactory.getImplementacion(implementacion);
 
 		this.lAlianzas = AlianzaDAO.cargarAlianzas();
-	
+
 	}
-	
-	
+
 	public Alianza conseguirAlianza(String idAlianza) {
 
 		for (Alianza alianza : this.lAlianzas) {
@@ -51,9 +41,7 @@ public class AlianzaController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	public void imprimirListaAlianzas() {
 		IOGeneral.println("\nID\tNombre");
 		for (Alianza a : this.lAlianzas) {

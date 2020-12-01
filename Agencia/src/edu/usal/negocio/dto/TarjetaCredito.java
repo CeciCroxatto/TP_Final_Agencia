@@ -1,11 +1,9 @@
 package edu.usal.negocio.dto;
 
-public class TarjetaCredito extends FormaDePago{
-	
+public class TarjetaCredito extends FormaDePago {
+
 	private int cuotas;
 
-	
-	
 	public TarjetaCredito() {
 		super();
 	}
@@ -15,12 +13,6 @@ public class TarjetaCredito extends FormaDePago{
 		this.cuotas = cuotas;
 	}
 
-	
-
-
-	
-	
-	
 	public int getCuotas() {
 		return cuotas;
 	}
@@ -28,11 +20,5 @@ public class TarjetaCredito extends FormaDePago{
 	public void setCuotas(int cuotas) {
 		this.cuotas = cuotas;
 	}
-	
-	
-	
-	
-
-	
 
 }

@@ -7,17 +7,10 @@ import edu.usal.util.FileIO;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-public class ProvinciaDAOImpleFile implements ProvinciaDAO{
-
+public class ProvinciaDAOImpleFile implements ProvinciaDAO {
 
 	private List<Provincia> lProvinciaDAO;
 
-	
-	
 	public List<Provincia> getlProvinciaDAO() {
 		return lProvinciaDAO;
 	}
@@ -25,8 +18,6 @@ public class ProvinciaDAOImpleFile implements ProvinciaDAO{
 	public void setlProvinciaDAO(List<Provincia> lProvinciaDAO) {
 		this.lProvinciaDAO = lProvinciaDAO;
 	}
-	
-	
 
 	@Override
 	public List<Provincia> cargarProvincias() {
@@ -40,9 +31,8 @@ public class ProvinciaDAOImpleFile implements ProvinciaDAO{
 			splitted = s.split("[,]", 0);
 			lProvinciaDAO.add(new Provincia(splitted[0], splitted[1]));
 		}
-		
+
 		return this.lProvinciaDAO;
 	}
-	
-	
+
 }

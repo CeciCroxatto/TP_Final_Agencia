@@ -1,9 +1,13 @@
 package edu.usal.controller;
 
 import edu.usal.negocio.dto.Aeropuerto;
-import edu.usal.negocio.dto.LineaAerea;
 import edu.usal.negocio.dto.Vuelo;
+import edu.usal.vista.VueloAltaVista;
+import edu.usal.vista.VueloBajaVista;
+import edu.usal.vista.VueloConsultaVista;
+import edu.usal.vista.VueloModificacionVista;
 import edu.usal.negocio.dao.factory.VueloFactory;
+import edu.usal.negocio.dao.implementaciones.file.VueloDAOImpleFile;
 import edu.usal.negocio.dao.implementaciones.sql.VueloDAOImpleSQL;
 import edu.usal.negocio.dao.interfaces.VueloDAO;
 
@@ -26,6 +30,10 @@ public class VueloController extends HttpServlet {
 	private List<Vuelo> lVuelos = null;
 	private LineaAereaController linAerContr;
 	private AeropuertoController aeropContr;
+	private VueloAltaVista vuAltaVista = null;
+	private VueloBajaVista vuBajaVista = null;
+	private VueloConsultaVista vuConsultaVista = null;
+	private VueloModificacionVista vuModificacionVista = null;
 
 	public VueloController() {
 		this.lVuelos = new ArrayList<Vuelo>();
@@ -42,7 +50,7 @@ public class VueloController extends HttpServlet {
 	}
 
 	public void cargarVuelos(String implementacion) {
-		
+
 		this.linAerContr = new LineaAereaController();
 		this.linAerContr.cargarLineaAereas(implementacion);
 		this.aeropContr = new AeropuertoController();
@@ -58,7 +66,8 @@ public class VueloController extends HttpServlet {
 
 		VueloDAO vueloDAO = VueloFactory.getImplementacion(implementacion);
 
-		vueloDAO.guardarVuelos(this.lVuelos);
+		if (vueloDAO instanceof VueloDAOImpleFile)
+			((VueloDAOImpleFile) vueloDAO).guardarVuelos(this.lVuelos);
 
 	}
 
@@ -71,37 +80,28 @@ public class VueloController extends HttpServlet {
 		}
 		return null;
 	}
-	
-	
+
 	public Date conseguirFechaDeSalida_por_ID(int idVuelo) {
 
 		Date fechaSalida = null;
-		
+
 		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
 		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeSalida_por_ID(idVuelo);
-		
 
 		return fechaSalida;
-		
-	
+
 	}
-	
+
 	public Date conseguirFechaDeLlegada_por_ID(int idVuelo) {
 
 		Date fechaSalida = null;
-		
+
 		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
 		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeLlegada_por_ID(idVuelo);
-		
 
 		return fechaSalida;
-		
-	
+
 	}
-	
-	
-	
-	
 
 	public int crearVuelo(String numeroVuelo, int asientosTotales, int asientosDisponibles, String idAeropuertoSalida,
 			String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS, String horasVuelo, String idLAerea) {
@@ -125,19 +125,16 @@ public class VueloController extends HttpServlet {
 		return vueloDAOImpleSQL.consultarVuelo(numeroVuelo, fechSalidaS);
 
 	}
-	
-	public int modificarVuelo(int idVuelo, String numeroVuelo, int asientosTotales, int asientosDisponibles, String idAeropuertoSalida,
-			String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS, String horasVuelo, String idLAerea) {
+
+	public int modificarVuelo(int idVuelo, String numeroVuelo, int asientosTotales, int asientosDisponibles,
+			String idAeropuertoSalida, String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS,
+			String horasVuelo, String idLAerea) {
 
 		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
-		return vueloDAOImpleSQL.modificarVuelo(idVuelo, numeroVuelo, asientosTotales, asientosDisponibles, idAeropuertoSalida,
-				idAeropuertoLlegada, fechSalidaS, fechLlegadaS, horasVuelo, idLAerea);
+		return vueloDAOImpleSQL.modificarVuelo(idVuelo, numeroVuelo, asientosTotales, asientosDisponibles,
+				idAeropuertoSalida, idAeropuertoLlegada, fechSalidaS, fechLlegadaS, horasVuelo, idLAerea);
 
 	}
-	
-	
-	
-	
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -146,16 +143,24 @@ public class VueloController extends HttpServlet {
 		String action = request.getParameter("boton");
 		switch (action) {
 		case "Alta":
-			formularioAlta(request, response);
+			this.vuAltaVista = new VueloAltaVista();
+			this.aeropContr = new AeropuertoController();
+			this.aeropContr.cargarAeropuertos();
+			vuAltaVista.formularioAlta(request, response, aeropContr);
 			break;
 		case "Baja":
-			formularioBaja_por_NroVueloYFechaSalida(request, response);
+			this.vuBajaVista = new VueloBajaVista();
+			vuBajaVista.formularioBaja_por_NroVueloYFechaSalida(request, response);
 			break;
 		case "Consulta":
-			formulario_de_consulta_por_NroVueloYFechaSalida(request, response);
+			this.vuConsultaVista = new VueloConsultaVista();
+			vuConsultaVista.formulario_de_consulta_por_NroVueloYFechaSalida(request, response);
 			break;
 		case "Modificacion":
-			formulario_de_modificacion_por_ID(request, response);
+			this.vuModificacionVista = new VueloModificacionVista();
+			this.aeropContr = new AeropuertoController();
+			this.aeropContr.cargarAeropuertos();
+			vuModificacionVista.formulario_de_modificacion_por_ID(request, response, aeropContr);
 			break;
 
 		}
@@ -302,492 +307,6 @@ public class VueloController extends HttpServlet {
 			break;
 
 		}
-
-	}
-
-	public void formularioAlta(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		PrintWriter out = response.getWriter();
-
-		out.append("<!DOCTYPE html>");
-		out.append("<head>");
-		out.append("<meta charset= \"utf-8\">");
-		out.append("<title>Alta de Vuelo</title>");
-		out.append("</head>");
-		out.append("<body>");
-		out.append("<article class=\"Titulo\">");
-		out.append("<h1>");
-		out.append("<i>");
-		out.append("<u>");
-		out.append("<b>Alta de Vuelo</b>");
-		out.append("</u>");
-		out.append("</i>");
-		out.append("</h1>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("<article>");
-		out.append("<form action=\"VueloServlet\" method=\"post\">");
-		out.append("<article class=\"Tabla\">");
-		out.append("<table border=\"1\">");
-		out.append("<tr>");
-		out.append("<th colspan=\"2\">");
-		out.append("<b>Alta de Vuelo</b>");
-		out.append("</th>");
-		out.append("<tr>");
-
-//		out.append("<tr>");
-//		out.append("<td>");
-//		out.append("<label for=\"1\">Linea Aerea: </label>");
-//		out.append("</td>");
-//		out.append("<td>");
-//		out.append("<select name=\"idLAerea\">");
-//		this.linAerContr = new LineaAereaController();
-//		this.linAerContr.cargarLineaAereas("SQL");
-//		for (LineaAerea lineaAerea : this.linAerContr.getlLineaAereas()) {
-//			out.append("<option value=\"");
-//			out.append(lineaAerea.getIdLAerea());
-//			out.append("\">");
-//			out.append(lineaAerea.getIdLAerea());
-//		}
-//		out.append("</select>");
-//		out.append("</td>");
-//		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"1\">Linea Aerea: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingrese ID de Linea Aerea que exista\"");
-		out.append("name=\"idLAerea\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"2\">Numero de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar Numero de Vuelo\"");
-		out.append("name=\"numeroVuelo\"pattern=\"^[0-9]{4}$\" title=\"4 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"3\">Cantidad de Asientos Totales: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"3\" placeholder=\"Ingresar asientos totales\"");
-		out.append("name=\"asientosTotales\"pattern=\"^[0-9]{0,3}$\" title=\"Hasta 3 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"4\">Cantidad de Asientos Disponibles: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"4\" placeholder=\"Ingresar asientos disponibles\"");
-		out.append("name=\"asientosDisponibles\"pattern=\"^[0-9]{0,3}$\" title=\"Hasta 3 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"5\">Aeropuerto de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<select name=\"aeropuertoSalida\">");
-		this.aeropContr = new AeropuertoController();
-		this.aeropContr.cargarAeropuertos();
-		for (Aeropuerto aeropuerto : this.aeropContr.getlAeropuertos()) {
-			out.append("<option value=\"");
-			out.append(aeropuerto.getIdAeropuerto());
-			out.append("\">");
-			out.append(aeropuerto.getIdAeropuerto());
-		}
-		out.append("</select>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"6\">Aeropuerto de Llegada: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<select name=\"aeropuertoLlegada\">");
-		for (Aeropuerto aeropuerto : this.aeropContr.getlAeropuertos()) {
-			out.append("<option value=\"");
-			out.append(aeropuerto.getIdAeropuerto());
-			out.append("\">");
-			out.append(aeropuerto.getIdAeropuerto());
-		}
-		out.append("</select>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"7\">Fecha de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"7\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechSalidaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"8\">Fecha de Llegada: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"8\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechLlegadaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"9\">Horas de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"9\" placeholder=\"Ingresar tiempo de vuelo\"");
-		out.append(
-				"name=\"horasVuelo\"pattern=\"([01]?[0-9]|2[0-3]):[0-5][0-9]\" title=\"En formato hh:mm\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Dar de alta\">");
-		out.append("</th>");
-		out.append("</tr>");
-		out.append("</table>");
-		out.append("</article>");
-		out.append("</form>");
-		out.append("<a href=Inicio.html>Volver al Inicio</a>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("</body>");
-		out.append("</html>");
-	}
-
-	public void formularioBaja_por_NroVueloYFechaSalida(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-
-		out.append("<!DOCTYPE html>");
-		out.append("<head>");
-		out.append("<meta charset= \"utf-8\">");
-		out.append("<title>Baja de Vuelo</title>");
-		out.append("</head>");
-		out.append("<body>");
-		out.append("<article class=\"Titulo\">");
-		out.append("<h1>");
-		out.append("<i>");
-		out.append("<u>");
-		out.append("<b>Baja de Vuelo</b>");
-		out.append("</u>");
-		out.append("</i>");
-		out.append("</h1>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("<article>");
-		out.append("<form action=\"VueloServlet\" method=\"post\">");
-		out.append("<article class=\"Tabla\">");
-		out.append("<table border=\"1\">");
-		out.append("<tr>");
-		out.append("<th colspan=\"2\">");
-		out.append("<b>Baja de Vuelo</b>");
-		out.append("</th>");
-		out.append("<tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"1\">Numero de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar Numero de Vuelo\"");
-		out.append("name=\"numeroVuelo\"pattern=\"[A-Z]{2}-[0-9]{4}\" title=\"2 mayusculas - 4 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"2\">Fecha de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"6\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechSalidaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Dar de baja\">");
-		out.append("</th>");
-		out.append("</tr>");
-		out.append("</table>");
-		out.append("</article>");
-		out.append("</form>");
-		out.append("<a href=Inicio.html>Volver al Inicio</a>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("</body>");
-		out.append("</html>");
-
-	}
-
-	public void formulario_de_consulta_por_NroVueloYFechaSalida(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-
-		out.append("<!DOCTYPE html>");
-		out.append("<head>");
-		out.append("<meta charset= \"utf-8\">");
-		out.append("<title>Consulta de Vuelo</title>");
-		out.append("</head>");
-		out.append("<body>");
-		out.append("<article class=\"Titulo\">");
-		out.append("<h1>");
-		out.append("<i>");
-		out.append("<u>");
-		out.append("<b>Consulta de Vuelo</b>");
-		out.append("</u>");
-		out.append("</i>");
-		out.append("</h1>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("<article>");
-		out.append("<form action=\"VueloServlet\" method=\"post\">");
-		out.append("<article class=\"Tabla\">");
-		out.append("<table border=\"1\">");
-		out.append("<tr>");
-		out.append("<th colspan=\"2\">");
-		out.append("<b>Consulta de Vuelo</b>");
-		out.append("</th>");
-		out.append("<tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"1\">Numero de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar Numero de Vuelo\"");
-		out.append("name=\"numeroVuelo\"pattern=\"[A-Z]{2}-[0-9]{4}\" title=\"2 mayusculas - 4 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"2\">Fecha de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"6\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechSalidaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Consultar\">");
-		out.append("</th>");
-		out.append("</tr>");
-		out.append("</table>");
-		out.append("</article>");
-		out.append("</form>");
-		out.append("<a href=Inicio.html>Volver al Inicio</a>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("</body>");
-		out.append("</html>");
-
-	}
-
-	public void formulario_de_modificacion_por_ID(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-
-		out.append("<!DOCTYPE html>");
-		out.append("<head>");
-		out.append("<meta charset= \"utf-8\">");
-		out.append("<title>Modificacion de Vuelo</title>");
-		out.append("</head>");
-		out.append("<body>");
-		out.append("<article class=\"Titulo\">");
-		out.append("<h1>");
-		out.append("<i>");
-		out.append("<u>");
-		out.append("<b>Modificacion de Vuelo</b>");
-		out.append("</u>");
-		out.append("</i>");
-		out.append("</h1>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("<article>");
-		out.append("<form action=\"VueloServlet\" method=\"post\">");
-		out.append("<article class=\"Tabla\">");
-		out.append("<table border=\"1\">");
-		out.append("<tr>");
-		out.append("<th colspan=\"2\">");
-		out.append("<b>Modificacion de Vuelo</b>");
-		out.append("</th>");
-		out.append("<tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"0\">ID del vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingrese ID del vuelo\"");
-		out.append("name=\"idVuelo\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-//		out.append("<tr>");
-//		out.append("<td>");
-//		out.append("<label for=\"1\">Linea Aerea: </label>");
-//		out.append("</td>");
-//		out.append("<td>");
-//		out.append("<select name=\"idLAerea\">");
-//		this.linAerContr = new LineaAereaController();
-//		this.linAerContr.cargarLineaAereas("SQL");
-//		for (LineaAerea lineaAerea : this.linAerContr.getlLineaAereas()) {
-//			out.append("<option value=\"");
-//			out.append(lineaAerea.getIdLAerea());
-//			out.append("\">");
-//			out.append(lineaAerea.getIdLAerea());
-//		}
-//		out.append("</select>");
-//		out.append("</td>");
-//		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"1\">Linea Aerea: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingrese ID de Linea Aerea que exista\"");
-		out.append("name=\"idLAerea\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"2\">Numero de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar Numero de Vuelo\"");
-		out.append("name=\"numeroVuelo\"pattern=\"^[0-9]{4}$\" title=\"4 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"3\">Cantidad de Asientos Totales: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar asientos totales\"");
-		out.append("name=\"asientosTotales\"pattern=\"^[0-9]{0,3}$\" title=\"Hasta 3 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"4\">Cantidad de Asientos Disponibles: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"1\" placeholder=\"Ingresar asientos disponibles\"");
-		out.append("name=\"asientosDisponibles\"pattern=\"^[0-9]{0,3}$\" title=\"Hasta 3 digitos\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"5\">Aeropuerto de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<select name=\"aeropuertoSalida\">");
-		this.aeropContr = new AeropuertoController();
-		this.aeropContr.cargarAeropuertos();
-		for (Aeropuerto aeropuerto : this.aeropContr.getlAeropuertos()) {
-			out.append("<option value=\"");
-			out.append(aeropuerto.getIdAeropuerto());
-			out.append("\">");
-			out.append(aeropuerto.getIdAeropuerto());
-		}
-		out.append("</select>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"6\">Aeropuerto de Llegada: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<select name=\"aeropuertoLlegada\">");
-		for (Aeropuerto aeropuerto : this.aeropContr.getlAeropuertos()) {
-			out.append("<option value=\"");
-			out.append(aeropuerto.getIdAeropuerto());
-			out.append("\">");
-			out.append(aeropuerto.getIdAeropuerto());
-		}
-		out.append("</select>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"7\">Fecha de Salida: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"6\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechSalidaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"8\">Fecha de Llegada: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"6\" placeholder=\"mm-dd-yyyy\"");
-		out.append(
-				"name=\"fechLlegadaS\"pattern=\"^(0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])[-](19|20)\\d\\d$\" title=\"mm-dd-yyyy\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<td>");
-		out.append("<label for=\"9\">Horas de Vuelo: </label>");
-		out.append("</td>");
-		out.append("<td>");
-		out.append("<input type=\"text\" id=\"6\" placeholder=\"Ingresar tiempo de vuelo\"");
-		out.append(
-				"name=\"horasVuelo\"pattern=\"([01]?[0-9]|2[0-3]):[0-5][0-9]\" title=\"En formato hh:mm\" required>");
-		out.append("</td>");
-		out.append("</tr>");
-
-		out.append("<tr>");
-		out.append("<th colspan=\"2\" align=\"CENTER\">");
-		out.append("<input type=\"submit\"name=\"boton\" value=\"Modificar\">");
-		out.append("</th>");
-		out.append("</tr>");
-		out.append("</table>");
-		out.append("</article>");
-		out.append("</form>");
-		out.append("<a href=Inicio.html>Volver al Inicio</a>");
-		out.append("</article>");
-		out.append("<hr>");
-		out.append("</body>");
-		out.append("</html>");
 
 	}
 

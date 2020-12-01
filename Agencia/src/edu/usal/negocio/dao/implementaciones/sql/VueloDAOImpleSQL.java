@@ -1,6 +1,5 @@
 package edu.usal.negocio.dao.implementaciones.sql;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,17 +23,10 @@ public class VueloDAOImpleSQL implements VueloDAO {
 	public List<Vuelo> cargarVuelos(AeropuertoController aeropContr, LineaAereaController lineaAContr) {
 
 		ArrayList<Vuelo> listaVuelos = new ArrayList<>();
-		
-		
+
 		return listaVuelos;
 	}
 
-	@Override
-	public void guardarVuelos(List<Vuelo> lVuelos) {
-
-	}
-	
-	
 	public Date conseguirFechaDeSalida_por_ID(int idVuelo) {
 
 		ResultSet res = null;
@@ -53,15 +45,13 @@ public class VueloDAOImpleSQL implements VueloDAO {
 				if (res != null) {
 
 					fechaSalidaS = res.getString("FEC_SALIDA");
-					
+
 					try {
 						fechaSalida = new SimpleDateFormat("yyyy-MM-dd").parse(fechaSalidaS);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-					
-					
-					
+
 				}
 			}
 
@@ -85,12 +75,11 @@ public class VueloDAOImpleSQL implements VueloDAO {
 		return fechaSalida;
 
 	}
-	
-	
+
 	public Date conseguirFechaDeLlegada_por_ID(int idVuelo) {
 
 		ResultSet res = null;
-		String fechaLlegadaS =  null;
+		String fechaLlegadaS = null;
 		Date fechaLlegada = null;
 
 		try (Connection con = ConnectionDB.getConnection();
@@ -105,13 +94,13 @@ public class VueloDAOImpleSQL implements VueloDAO {
 				if (res != null) {
 
 					fechaLlegadaS = res.getString("FEC_LLEGADA");
-					
+
 					try {
 						fechaLlegada = new SimpleDateFormat("yyyy-MM-dd").parse(fechaLlegadaS);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-					
+
 				}
 			}
 
@@ -135,9 +124,6 @@ public class VueloDAOImpleSQL implements VueloDAO {
 		return fechaLlegada;
 
 	}
-	
-	
-	
 
 	public int crearVuelo(String numeroVuelo, int asientosTotales, int asientosDisponibles, String idAeropuertoSalida,
 			String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS, String horasVuelo, String idLAerea) {
@@ -193,18 +179,17 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 	}
 
-	
 	public int bajarVuelo(String numeroVuelo, String fechSalidaS) {
 		Connection con = ConnectionDB.getConnection();
 		PreparedStatement ps = null;
 		int registrosAlterados = -22;
-		
+
 		System.out.println(numeroVuelo + fechSalidaS);
 
 		try {
 			con.setAutoCommit(false);
 			ps = con.prepareStatement("update Vuelo set ESTADO = 0 where NROVUELO = ? AND FEC_SALIDA = ?");
-			
+
 			ps.setString(1, numeroVuelo);
 			ps.setString(2, fechSalidaS);
 
@@ -239,10 +224,9 @@ public class VueloDAOImpleSQL implements VueloDAO {
 		return registrosAlterados;
 
 	}
-	
 
 	public String consultarVuelo(String numeroVuelo, String fechSalidaS) {
-		
+
 		Connection con = ConnectionDB.getConnection();
 		PreparedStatement ps = null;
 		ResultSet res = null;
@@ -254,21 +238,21 @@ public class VueloDAOImpleSQL implements VueloDAO {
 			ps = con.prepareStatement("Select * from Vuelo where NROVUELO = ? AND FEC_SALIDA = ?");
 			ps.setString(1, numeroVuelo);
 			ps.setString(2, fechSalidaS);
-			
+
 			res = ps.executeQuery();
-			
+
 			texto = "";
-			
+
 			while (res.next()) {
 
 				if (res != null) {
 
-					texto = texto + "IDVuelo: " + res.getString("IDVUELO") + "<br>" + " NroVuelo: " + res.getString("NROVUELO") + "<br>"
-							+ "Asientos Disponibles: " + res.getString("ASIENTOS_DISPONIBLES") + "<br>" 
-							+ "Fecha de Salida: " + res.getString("FEC_SALIDA") + "<br>"
-							+ "Horas de Vuelo: " + res.getString("HORAS_VUELO") + "<br>"
-							+ "<br>";
-				} 
+					texto = texto + "IDVuelo: " + res.getString("IDVUELO") + "<br>" + " NroVuelo: "
+							+ res.getString("NROVUELO") + "<br>" + "Asientos Disponibles: "
+							+ res.getString("ASIENTOS_DISPONIBLES") + "<br>" + "Fecha de Salida: "
+							+ res.getString("FEC_SALIDA") + "<br>" + "Horas de Vuelo: " + res.getString("HORAS_VUELO")
+							+ "<br>" + "<br>";
+				}
 			}
 
 			res.close();
@@ -284,30 +268,25 @@ public class VueloDAOImpleSQL implements VueloDAO {
 				e2.printStackTrace();
 			}
 
-		} 
+		}
 
-		
-		
 		return texto;
 	}
-	
-	
 
-	public int modificarVuelo(int idVuelo, String numeroVuelo, int asientosTotales, int asientosDisponibles, 
-			String idAeropuertoSalida, String idAeropuertoLlegada, 
-			String fechSalidaS, String fechLlegadaS, String horasVuelo, String idLAerea) {
-		
+	public int modificarVuelo(int idVuelo, String numeroVuelo, int asientosTotales, int asientosDisponibles,
+			String idAeropuertoSalida, String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS,
+			String horasVuelo, String idLAerea) {
+
 		Connection con = ConnectionDB.getConnection();
 		PreparedStatement ps = null;
 		int registrosAlterados = -13;
-		
+
 		try {
 			con.setAutoCommit(false);
 			ps = con.prepareStatement("UPDATE Vuelo SET NROVUELO = ?, ASIENTOS_DISPONIBLES = ?, "
 					+ "ASIENTOS_TOTALES = ?, AEROPUERTO_SALIDA_ID = ?, AEROPUERTO_LLEGADA_ID = ?,"
-					+ "FEC_SALIDA = ?, FEC_LLEGADA = ?, HORAS_VUELO = ?, AEROLINEA_ID = ? "
-					+ "where IDVUELO = ?");
-			
+					+ "FEC_SALIDA = ?, FEC_LLEGADA = ?, HORAS_VUELO = ?, AEROLINEA_ID = ? " + "where IDVUELO = ?");
+
 			ps.setString(1, numeroVuelo);
 			ps.setInt(2, asientosDisponibles);
 			ps.setInt(3, asientosTotales);
@@ -330,7 +309,7 @@ public class VueloDAOImpleSQL implements VueloDAO {
 					e2.printStackTrace();
 				}
 			}
-			
+
 			con.commit();
 			con.close();
 			if (con.isClosed())
@@ -350,7 +329,5 @@ public class VueloDAOImpleSQL implements VueloDAO {
 		return registrosAlterados;
 
 	}
-	
-	
-	
+
 }

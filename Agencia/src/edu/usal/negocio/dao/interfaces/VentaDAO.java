@@ -7,14 +7,9 @@ import edu.usal.negocio.dto.Venta;
 
 import java.util.List;
 
-
-
 public interface VentaDAO {
-	
-	public List<Venta> cargarVentas(ClienteController clientContr
-			, VueloController vueloContr, FormaDePagoController formaDPContr);
-	
-	public void guardarVentas(List<Venta> lVentas);
-	
-	
+
+	public List<Venta> cargarVentas(ClienteController clientContr, VueloController vueloContr,
+			FormaDePagoController formaDPContr);
+
 }

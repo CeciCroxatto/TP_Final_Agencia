@@ -4,10 +4,8 @@ import edu.usal.negocio.dto.Provincia;
 
 import java.util.List;
 
-
 public interface ProvinciaDAO {
-	
+
 	public List<Provincia> cargarProvincias();
-	
 
 }

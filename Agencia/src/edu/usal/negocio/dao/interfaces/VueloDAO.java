@@ -6,12 +6,8 @@ import edu.usal.negocio.dto.Vuelo;
 
 import java.util.List;
 
-
 public interface VueloDAO {
 
-	public List< Vuelo> cargarVuelos(AeropuertoController aeropContr
-			, LineaAereaController lineaAContr);
-	
-	public void guardarVuelos(List< Vuelo> lVuelos);
-	
+	public List<Vuelo> cargarVuelos(AeropuertoController aeropContr, LineaAereaController lineaAContr);
+
 }

@@ -25,17 +25,12 @@ public class VentaDAOImpleSQL implements VentaDAO {
 		return listaVentas;
 	}
 
-	@Override
-	public void guardarVentas(List<Venta> lVentas) {
-
-	}
-
 	public String crearVenta(String cuil, int idVuelo, int idPago, double importe_vuelo, double importe_total) {
 
 		Connection con = ConnectionDB.getConnection();
 		CallableStatement cst = null;
 		ResultSet res = null;
-		String texto = "VACIO";
+		String texto = "AAA";
 
 		try {
 			con.setAutoCommit(false);
@@ -48,6 +43,12 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 			try {
 				res = cst.executeQuery();
+				while (res.next()) {
+					if (res != null) {
+						texto = res.getString("msg");
+					}
+				}
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try {
@@ -63,7 +64,56 @@ public class VentaDAOImpleSQL implements VentaDAO {
 			if (con.isClosed())
 				System.out.println("Conexion cerrada");
 
-			texto = res.getString("msg");
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return texto;
+
+	}
+
+	public String bajarVenta(String cuil, String numeroVuelo) {
+
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		ResultSet res = null;
+		String texto = "BBB";
+
+		try {
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_BajaLogicaVenta ?, ?");
+			cst.setString(1, cuil);
+			cst.setString(2, numeroVuelo);
+
+			try {
+				res = cst.executeQuery();
+				while (res.next()) {
+					if (res != null) {
+						texto = res.getString("msg");
+					}
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					cst.close();
+					ConnectionDB.RollBack(con);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+
+			con.commit();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -79,4 +129,111 @@ public class VentaDAOImpleSQL implements VentaDAO {
 		return texto;
 
 	}
+
+	public String consultarVenta(String cuil, String numeroVuelo) {
+
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		ResultSet res = null;
+		String texto = "No se encontro una Venta para ese CUIL y Numero de Vuelo";
+
+		try {
+
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_ConsultarVenta ?, ?");
+			cst.setString(1, cuil);
+			cst.setString(2, numeroVuelo);
+
+			res = cst.executeQuery();
+			texto = "";
+
+			while (res.next()) {
+
+				if (res != null) {
+
+					texto = texto + "Nombre: " + res.getString("NOMBRE") + "<br>" + " Apellido: "
+							+ res.getString("APELLIDO") + "<br>" + "CUIL: " + res.getString("CUIL") + "<br>"
+							+ "Numero de Vuelo: " + res.getString("NROVUELO") + "<br>" + "Aeropuerto de Salida: "
+							+ res.getString("AEROPUERTO_SALIDA_ID") + "<br>" + "Aeropuerto de Llegada: "
+							+ res.getString("AEROPUERTO_LLEGADA_ID") + "<br>" + "Nombre de LineaAerea: "
+							+ res.getString("nombreLA") + "<br>" + "Importe total: " + res.getString("importe_total")
+							+ "<br>" + "<br>";
+				}
+			}
+
+			res.close();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return texto;
+
+	}
+
+	public String modificarVenta(String cuil, String numeroVuelo, String fechVenta, int idPago, double importe_vuelo,
+			double importe_total) {
+
+		Connection con = ConnectionDB.getConnection();
+		CallableStatement cst = null;
+		ResultSet res = null;
+		String texto = "DDD";
+
+		try {
+			con.setAutoCommit(false);
+			cst = con.prepareCall("EXEC sp_ModificarVenta ?, ?, ?, ?, ?, ?");
+			cst.setString(1, cuil);
+			cst.setString(2, numeroVuelo);
+			cst.setString(3, fechVenta);
+			cst.setInt(4, idPago);
+			cst.setDouble(5, importe_vuelo);
+			cst.setDouble(6, importe_total);
+
+			try {
+				res = cst.executeQuery();
+				while (res.next()) {
+					if (res != null) {
+						texto = res.getString("msg");
+					}
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					cst.close();
+					ConnectionDB.RollBack(con);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+
+			con.commit();
+			con.close();
+			if (con.isClosed())
+				System.out.println("Conexion cerrada");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			try {
+				ConnectionDB.RollBack(con);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+		}
+
+		return texto;
+
+	}
+
 }

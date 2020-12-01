@@ -7,14 +7,10 @@ import edu.usal.negocio.dao.interfaces.AlianzaDAO;
 import edu.usal.negocio.dto.Alianza;
 import edu.usal.util.FileIO;
 
-
-public class AlianzaDAOImpleFile implements AlianzaDAO{
+public class AlianzaDAOImpleFile implements AlianzaDAO {
 
 	private List<Alianza> lAlianzaDAO;
 
-	
-	
-	
 	@Override
 	public List<Alianza> cargarAlianzas() {
 
@@ -26,7 +22,7 @@ public class AlianzaDAOImpleFile implements AlianzaDAO{
 			idAlianza = s.substring(0, 3);
 			lAlianzaDAO.add(new Alianza(idAlianza, s));
 		}
-		
+
 		return this.lAlianzaDAO;
 	}
 }

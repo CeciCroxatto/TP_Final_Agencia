@@ -2,19 +2,18 @@ package edu.usal.negocio.dto;
 
 import java.util.Date;
 
-
 public class Pasaporte {
-	
+
 	private String nroPasaporte;
 	private Pais pais;
 	private String autoridad;
 	private Date fechEmision;
 	private Date vencimiento;
-	
+
 	public Pasaporte() {
 
 	}
-	
+
 	public Pasaporte(String nroPasaporte, Pais pais, String autoridad, Date fechEmision, Date vencimiento) {
 		this.nroPasaporte = nroPasaporte;
 		this.pais = pais;
@@ -23,8 +22,6 @@ public class Pasaporte {
 		this.vencimiento = vencimiento;
 	}
 
-	
-	
 	public String getnroPasaporte() {
 		return nroPasaporte;
 	}
@@ -64,8 +61,5 @@ public class Pasaporte {
 	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
-	
-	
-	
 
 }

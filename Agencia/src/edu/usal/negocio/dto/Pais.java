@@ -4,21 +4,16 @@ public class Pais {
 
 	protected int idPais;
 	protected String descripcion;
-	
-	
-	
-	public Pais(){
-		
+
+	public Pais() {
+
 	}
-	
-	
+
 	public Pais(int idPais, String descripcion) {
 		this.idPais = idPais;
 		this.descripcion = descripcion;
 	}
 
-	
-	
 	public int getIdPais() {
 		return idPais;
 	}
@@ -34,8 +29,5 @@ public class Pais {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
-	
-	
-	
+
 }

@@ -1,16 +1,24 @@
 package edu.usal.negocio.dto;
 
 public class PaisOtro extends Pais {
-
-	private String estado;
+	
+	private String provEstado;
 
 	public PaisOtro() {
 		super();
 	}
 
-	public PaisOtro(int idPais, String descripcion, String Estado) {
+	public PaisOtro(int idPais, String descripcion, String provEstado) {
 		super(idPais, descripcion);
-		this.estado = Estado;
+		this.provEstado = provEstado;
+	}
+
+	public String getProvEstado() {
+		return provEstado;
+	}
+
+	public void setProvEstado(String provincia) {
+		this.provEstado = provincia;
 	}
 
 }

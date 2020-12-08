@@ -26,7 +26,7 @@ public class FileIO {
 			IOGeneral.println("Error 1: " + e.toString());
 		}
 
-		List<String> lString = new ArrayList();
+		List<String> lString = new ArrayList<String>();
 		String pathClase = prop.classToPath(clase);
 
 		Scanner archivoEntrada = null;

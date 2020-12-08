@@ -19,13 +19,11 @@ import edu.usal.util.ConnectionDB;
 
 public class VueloDAOImpleSQL implements VueloDAO {
 
-	@Override
-	public List<Vuelo> cargarVuelos(AeropuertoController aeropContr, LineaAereaController lineaAContr) {
-
-		ArrayList<Vuelo> listaVuelos = new ArrayList<>();
-
-		return listaVuelos;
-	}
+	/*
+	 * 
+	 * Funciones que usan la vista web
+	 *
+	 */
 
 	public Date conseguirFechaDeSalida_por_ID(int idVuelo) {
 
@@ -57,8 +55,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -106,8 +104,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -161,8 +159,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -207,8 +205,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -257,8 +255,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -312,8 +310,8 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -328,6 +326,20 @@ public class VueloDAOImpleSQL implements VueloDAO {
 
 		return registrosAlterados;
 
+	}
+
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
+	@Override
+	public List<Vuelo> cargarVuelos(AeropuertoController aeropContr, LineaAereaController lineaAContr) {
+
+		ArrayList<Vuelo> listaVuelos = new ArrayList<>();
+
+		return listaVuelos;
 	}
 
 }

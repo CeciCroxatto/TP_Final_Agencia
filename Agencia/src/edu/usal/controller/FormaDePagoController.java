@@ -24,7 +24,7 @@ public class FormaDePagoController {
 
 	public void cargarFormaDePagos() {
 
-		this.lFormaDePagos = new ArrayList();
+		this.lFormaDePagos = new ArrayList<FormaDePago>();
 
 		this.lFormaDePagos.add(new FormaDePago(0, "Efectivo"));
 		this.lFormaDePagos.add(new TarjetaCredito(3, "Tarjeta de Credito", 3));

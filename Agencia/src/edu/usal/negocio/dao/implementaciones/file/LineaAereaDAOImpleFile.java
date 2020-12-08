@@ -1,7 +1,6 @@
 package edu.usal.negocio.dao.implementaciones.file;
 
 import edu.usal.controller.AlianzaController;
-import edu.usal.controller.PasaporteController;
 import edu.usal.negocio.dao.interfaces.LineaAereaDAO;
 import edu.usal.negocio.dto.Alianza;
 import edu.usal.negocio.dto.LineaAerea;
@@ -14,18 +13,16 @@ public class LineaAereaDAOImpleFile implements LineaAereaDAO {
 
 	private List<LineaAerea> lLineaAereaDAO;
 
-	public List<LineaAerea> getlLineaAereaDAO() {
-		return lLineaAereaDAO;
-	}
-
-	public void setlLineaAereaDAO(List<LineaAerea> lLineaAereaDAO) {
-		this.lLineaAereaDAO = lLineaAereaDAO;
-	}
+	/*
+	 * 
+	 * Funciones que usan la GUI y el Manager
+	 *
+	 */
 
 	@Override
 	public List<LineaAerea> cargarLineaAereas(AlianzaController alianContr) {
 
-		this.lLineaAereaDAO = new ArrayList();
+		this.lLineaAereaDAO = new ArrayList<LineaAerea>();
 		FileIO IOfile = new FileIO();
 		String[] splitted = null;
 		String idLAerea = null;
@@ -49,10 +46,16 @@ public class LineaAereaDAOImpleFile implements LineaAereaDAO {
 
 	}
 
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
 	public void guardarLineaAereas(List<LineaAerea> lLineaAereas) {
 
 		FileIO IOfile = new FileIO();
-		List<String> lString = new ArrayList();
+		List<String> lString = new ArrayList<String>();
 
 		lString.add("# String idLAerea, String nombre, String idAlianza (primeras 3 letras)");
 		lString.add("# idLAerea: https://www.iata.org/en/publications/directories/code-search/");
@@ -66,6 +69,14 @@ public class LineaAereaDAOImpleFile implements LineaAereaDAO {
 
 		IOfile.guardarLista("LineaAerea", lString);
 
+	}
+
+	public List<LineaAerea> getlLineaAereaDAO() {
+		return lLineaAereaDAO;
+	}
+
+	public void setlLineaAereaDAO(List<LineaAerea> lLineaAereaDAO) {
+		this.lLineaAereaDAO = lLineaAereaDAO;
 	}
 
 }

@@ -1,15 +1,11 @@
 package edu.usal.controller;
 
-import edu.usal.negocio.dto.Aeropuerto;
 import edu.usal.negocio.dto.Vuelo;
 import edu.usal.vista.VueloAltaVista;
 import edu.usal.vista.VueloBajaVista;
 import edu.usal.vista.VueloConsultaVista;
 import edu.usal.vista.VueloModificacionVista;
-import edu.usal.negocio.dao.factory.VueloFactory;
-import edu.usal.negocio.dao.implementaciones.file.VueloDAOImpleFile;
 import edu.usal.negocio.dao.implementaciones.sql.VueloDAOImpleSQL;
-import edu.usal.negocio.dao.interfaces.VueloDAO;
 
 import java.util.List;
 
@@ -19,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,8 +22,10 @@ import java.util.Date;
 
 public class VueloController extends HttpServlet {
 
+	private static final long serialVersionUID = 1L;
+
 	private List<Vuelo> lVuelos = null;
-	private LineaAereaController linAerContr;
+//	private LineaAereaController linAerContr;
 	private AeropuertoController aeropContr;
 	private VueloAltaVista vuAltaVista = null;
 	private VueloBajaVista vuBajaVista = null;
@@ -37,71 +34,15 @@ public class VueloController extends HttpServlet {
 
 	public VueloController() {
 		this.lVuelos = new ArrayList<Vuelo>();
-		this.linAerContr = new LineaAereaController();
+//		this.linAerContr = new LineaAereaController();
 		this.aeropContr = new AeropuertoController();
 	}
 
-	public List<Vuelo> getlVuelos() {
-		return lVuelos;
-	}
-
-	public void setlVuelos(List<Vuelo> lVuelos) {
-		this.lVuelos = lVuelos;
-	}
-
-	public void cargarVuelos(String implementacion) {
-
-		this.linAerContr = new LineaAereaController();
-		this.linAerContr.cargarLineaAereas(implementacion);
-		this.aeropContr = new AeropuertoController();
-		this.aeropContr.cargarAeropuertos();
-
-		VueloDAO vueloDAO = VueloFactory.getImplementacion(implementacion);
-
-		this.lVuelos = vueloDAO.cargarVuelos(this.aeropContr, this.linAerContr);
-
-	}
-
-	public void guardarVuelos(String implementacion) {
-
-		VueloDAO vueloDAO = VueloFactory.getImplementacion(implementacion);
-
-		if (vueloDAO instanceof VueloDAOImpleFile)
-			((VueloDAOImpleFile) vueloDAO).guardarVuelos(this.lVuelos);
-
-	}
-
-	public Vuelo conseguirVuelo(int idVuelo) {
-
-		for (Vuelo telefono : this.lVuelos) {
-			if (telefono.getIdVuelo() == idVuelo) {
-				return telefono;
-			}
-		}
-		return null;
-	}
-
-	public Date conseguirFechaDeSalida_por_ID(int idVuelo) {
-
-		Date fechaSalida = null;
-
-		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
-		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeSalida_por_ID(idVuelo);
-
-		return fechaSalida;
-
-	}
-
-	public Date conseguirFechaDeLlegada_por_ID(int idVuelo) {
-
-		Date fechaSalida = null;
-
-		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
-		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeLlegada_por_ID(idVuelo);
-
-		return fechaSalida;
-
-	}
+	/*
+	 * 
+	 * Funciones que usan la vista web
+	 *
+	 */
 
 	public int crearVuelo(String numeroVuelo, int asientosTotales, int asientosDisponibles, String idAeropuertoSalida,
 			String idAeropuertoLlegada, String fechSalidaS, String fechLlegadaS, String horasVuelo, String idLAerea) {
@@ -145,7 +86,7 @@ public class VueloController extends HttpServlet {
 		case "Alta":
 			this.vuAltaVista = new VueloAltaVista();
 			this.aeropContr = new AeropuertoController();
-			this.aeropContr.cargarAeropuertos();
+//			this.aeropContr.cargarAeropuertos();
 			vuAltaVista.formularioAlta(request, response, aeropContr);
 			break;
 		case "Baja":
@@ -159,7 +100,7 @@ public class VueloController extends HttpServlet {
 		case "Modificacion":
 			this.vuModificacionVista = new VueloModificacionVista();
 			this.aeropContr = new AeropuertoController();
-			this.aeropContr.cargarAeropuertos();
+//			this.aeropContr.cargarAeropuertos();
 			vuModificacionVista.formulario_de_modificacion_por_ID(request, response, aeropContr);
 			break;
 
@@ -308,6 +249,74 @@ public class VueloController extends HttpServlet {
 
 		}
 
+	}
+
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
+//	public void cargarVuelos(String implementacion) {
+//
+//		this.linAerContr = new LineaAereaController();
+//		this.linAerContr.cargarLineaAereas(implementacion);
+//		this.aeropContr = new AeropuertoController();
+////		this.aeropContr.cargarAeropuertos();
+//
+//		VueloDAO vueloDAO = VueloFactory.getImplementacion(implementacion);
+//
+//		this.lVuelos = vueloDAO.cargarVuelos(this.aeropContr, this.linAerContr);
+//
+//	}
+
+//	public void guardarVuelos(String implementacion) {
+//
+//		VueloDAO vueloDAO = VueloFactory.getImplementacion(implementacion);
+//
+//		if (vueloDAO instanceof VueloDAOImpleFile)
+//			((VueloDAOImpleFile) vueloDAO).guardarVuelos(this.lVuelos);
+//
+//	}
+
+//	public Vuelo conseguirVuelo(int idVuelo) {
+//
+//		for (Vuelo telefono : this.lVuelos) {
+//			if (telefono.getIdVuelo() == idVuelo) {
+//				return telefono;
+//			}
+//		}
+//		return null;
+//	}
+
+//	public Date conseguirFechaDeSalida_por_ID(int idVuelo) {
+//
+//		Date fechaSalida = null;
+//
+//		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
+//		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeSalida_por_ID(idVuelo);
+//
+//		return fechaSalida;
+//
+//	}
+
+//	public Date conseguirFechaDeLlegada_por_ID(int idVuelo) {
+//
+//		Date fechaSalida = null;
+//
+//		VueloDAOImpleSQL vueloDAOImpleSQL = new VueloDAOImpleSQL();
+//		fechaSalida = vueloDAOImpleSQL.conseguirFechaDeLlegada_por_ID(idVuelo);
+//
+//		return fechaSalida;
+//
+//	}
+
+	public List<Vuelo> getlVuelos() {
+		return lVuelos;
+	}
+
+	public void setlVuelos(List<Vuelo> lVuelos) {
+		this.lVuelos = lVuelos;
 	}
 
 }

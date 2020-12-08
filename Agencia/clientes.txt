@@ -1,7 +1,1 @@
 #int idCliente, String nombre, String apellido, String dni, String nroPasaporte, String cuil, Date fechNac, int idTelefono, String nroPF, String email, int idDireccion
-1,Arnaldo,Alvarez,11111111,ABC123456,20111111119,1/1/-10,1,AA11111111,email1@email1.com,1
-2,Brubo,Barcia,22222222,ABC123457,20222222229,2/1/-21,2,AA11111111,email2@email.com,2
-3,Carla,Cesar,33333333,BBC123455,20333333339,3/1/-32,3,AA11111111,email3@email.com,3
-4,Daniel,Diaz,44444444,UBC123458,20444444449,4/1/-43,4,AA11111111,email4@email.com,4
-5,Emilio,Erns,55555555,UBC123459,20555555559,5/1/-54,5,AA11111111,email5@email.com,5
-6,Florencia,Franco,66666666,ABC123457,20666666669,6/1/-65,6,AA11111111,email6@email.com,6

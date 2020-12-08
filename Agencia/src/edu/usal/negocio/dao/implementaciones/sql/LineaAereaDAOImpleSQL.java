@@ -16,6 +16,12 @@ import edu.usal.negocio.dao.interfaces.LineaAereaDAO;
 
 public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
+	/*
+	 * 
+	 * Funciones que usan la GUI y el Manager
+	 *
+	 */
+
 	@Override
 	public List<LineaAerea> cargarLineaAereas(AlianzaController alianContr) {
 
@@ -23,9 +29,9 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 		ResultSet res;
 		Alianza alianza = null;
 
-		try (Connection con = ConnectionDB.getConnection();
-				Statement q = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
-			res = q.executeQuery("Select * from LineaAerea");
+		try (Connection con = ConnectionDB.getConnection(); Statement q = con.createStatement();) {
+
+			res = q.executeQuery("Select * from LineaAerea order by NOMBRE asc");
 			while (res.next()) {
 
 				alianza = alianContr.conseguirAlianza(res.getString("ALIANZA"));
@@ -34,18 +40,22 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 			}
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return listaLineaAereas;
 		}
-		System.out.println("Base de datos leída");
 
 		return listaLineaAereas;
 
 	}
+
+	/*
+	 * 
+	 * Funciones que usan la GUI y sin Manager
+	 *
+	 */
 
 	public int crearLineaAerea(LineaAerea lineaAerea) {
 
@@ -73,8 +83,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -105,8 +115,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -153,8 +163,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -191,8 +201,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -221,8 +231,8 @@ public class LineaAereaDAOImpleSQL implements LineaAereaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 

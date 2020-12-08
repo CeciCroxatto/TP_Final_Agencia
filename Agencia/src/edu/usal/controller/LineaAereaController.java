@@ -8,13 +8,11 @@ import edu.usal.vista.LineaAereaModificacionVista;
 import edu.usal.negocio.dto.Alianza;
 import edu.usal.negocio.dao.factory.LineaAereaFactory;
 import edu.usal.negocio.dao.interfaces.LineaAereaDAO;
-import edu.usal.negocio.dao.implementaciones.file.LineaAereaDAOImpleFile;
 import edu.usal.negocio.dao.implementaciones.sql.LineaAereaDAOImpleSQL;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +21,10 @@ import javax.servlet.ServletException;
 
 public class LineaAereaController extends HttpServlet {
 
+	private static final long serialVersionUID = 1L;
+
 	private List<LineaAerea> lLineaAereas = null;
+	private String[] lLineasAereasNombre = null;
 	private AlianzaController alianContr;
 	private LineaAereaAltaVista laAltaVista = null;
 	private LineaAereaBajaVista laBajaVista = null;
@@ -35,31 +36,46 @@ public class LineaAereaController extends HttpServlet {
 		this.alianContr = new AlianzaController();
 	}
 
-	public List<LineaAerea> getlLineaAereas() {
-		return lLineaAereas;
-	}
-
-	public void setlLineaAereas(List<LineaAerea> lLineaAereas) {
-		this.lLineaAereas = lLineaAereas;
-	}
-
 	public void cargarLineaAereas(String implementacion) {
 
 		LineaAereaDAO lineaAereaDAO = LineaAereaFactory.getImplementacion(implementacion);
 		this.alianContr = new AlianzaController();
-		this.alianContr.cargarAlianzas("file");
+		this.alianContr.cargarAlianzas();
 		this.lLineaAereas = lineaAereaDAO.cargarLineaAereas(this.alianContr);
 
+		int cantLineasAereas = this.lLineaAereas.size();
+		this.lLineasAereasNombre = new String[cantLineasAereas];
+
+		int i = 0;
+		for (i = 0; i < cantLineasAereas; i++) {
+			this.lLineasAereasNombre[i] = this.lLineaAereas.get(i).getNombre();
+		}
+
 	}
 
-	public void guardarLineaAereas(String implementacion) {
+	/*
+	 * 
+	 * Funciones que usan la GUI y Manager
+	 *
+	 */
 
-		LineaAereaDAO lineaAereaDAO = LineaAereaFactory.getImplementacion(implementacion);
+	public LineaAerea conseguirLineaAerea(String nombre) {
 
-		if (lineaAereaDAO instanceof LineaAereaDAOImpleFile)
-			((LineaAereaDAOImpleFile) lineaAereaDAO).guardarLineaAereas(this.lLineaAereas);
+		cargarLineaAereas("SQL");
 
+		for (LineaAerea lineaAerea : this.lLineaAereas) {
+			if (lineaAerea.getNombre().equals(nombre)) {
+				return lineaAerea;
+			}
+		}
+		return null;
 	}
+
+	/*
+	 * 
+	 * Funciones que usan la GUI y sin Manager
+	 *
+	 */
 
 	public int crearLineaAerea(LineaAerea lineaAerea) {
 
@@ -96,15 +112,11 @@ public class LineaAereaController extends HttpServlet {
 
 	}
 
-	public LineaAerea conseguirLineaAerea(String idLAerea) {
-
-		for (LineaAerea lineaAerea : this.lLineaAereas) {
-			if (lineaAerea.getIdLAerea().equals(idLAerea)) {
-				return lineaAerea;
-			}
-		}
-		return null;
-	}
+	/*
+	 * 
+	 * Funciones que usan la vista web
+	 *
+	 */
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -115,7 +127,7 @@ public class LineaAereaController extends HttpServlet {
 		case "Alta":
 			this.laAltaVista = new LineaAereaAltaVista();
 			this.alianContr = new AlianzaController();
-			this.alianContr.cargarAlianzas("file");
+			this.alianContr.cargarAlianzas(); // para cargar el archivo de t exto
 			laAltaVista.formularioAlta(request, response, alianContr);
 			break;
 		case "Baja":
@@ -129,7 +141,7 @@ public class LineaAereaController extends HttpServlet {
 		case "Modificacion":
 			this.laModificacionVista = new LineaAereaModificacionVista();
 			this.alianContr = new AlianzaController();
-			this.alianContr.cargarAlianzas("file");
+			this.alianContr.cargarAlianzas();
 			laModificacionVista.formulario_de_modificacion(request, response, alianContr);
 			break;
 
@@ -157,7 +169,7 @@ public class LineaAereaController extends HttpServlet {
 			idAlianza = request.getParameter("idAlianza");
 
 			this.alianContr = new AlianzaController();
-			this.alianContr.cargarAlianzas("file");
+			this.alianContr.cargarAlianzas();
 			Alianza alianza = this.alianContr.conseguirAlianza(idAlianza);
 
 			LineaAerea LineaAereaNueva = new LineaAerea(idLAerea, nombre, alianza);
@@ -225,6 +237,37 @@ public class LineaAereaController extends HttpServlet {
 			break;
 
 		}
+	}
+
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
+//	public void guardarLineaAereas(String implementacion) {
+//
+//		LineaAereaDAO lineaAereaDAO = LineaAereaFactory.getImplementacion(implementacion);
+//
+//		if (lineaAereaDAO instanceof LineaAereaDAOImpleFile)
+//			((LineaAereaDAOImpleFile) lineaAereaDAO).guardarLineaAereas(this.lLineaAereas);
+//
+//	}
+
+	public String[] getlLineasAereasNombre() {
+		return lLineasAereasNombre;
+	}
+
+	public void setlLineasAereasNombre(String[] lLineasAereasDescrip) {
+		this.lLineasAereasNombre = lLineasAereasDescrip;
+	}
+
+	public List<LineaAerea> getlLineaAereas() {
+		return lLineaAereas;
+	}
+
+	public void setlLineaAereas(List<LineaAerea> lLineaAereas) {
+		this.lLineaAereas = lLineaAereas;
 	}
 
 }

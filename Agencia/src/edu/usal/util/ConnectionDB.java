@@ -11,9 +11,8 @@ public class ConnectionDB {
 	private String url = null;
 
 	public static Connection getConnection() {
-		if (con == null) {
-			new ConnectionDB();
-		}
+
+		new ConnectionDB();
 		return con;
 	}
 
@@ -30,18 +29,24 @@ public class ConnectionDB {
 
 		url = prop.url();
 		try {
-			System.out.println("...cargando driver");
+//			System.out.println("...cargando driver");
 			Class.forName(prop.driver());
-			System.out.println("Driver cargado");
+//			System.out.println("Driver cargado");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Error al registrar el driver: " + e);
 		}
 
 		try {
-			System.out.println("...Conectando al DB");
+//			System.out.println("...Conectando al DB");
 			con = DriverManager.getConnection(url, prop.user(), prop.password());
 
-			System.out.println("Conexion exitosa");
+//			try {
+//				Thread.sleep(5000);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+
+//			System.out.println("Conexion exitosa");
 		} catch (SQLException e) {
 			System.out.println("Error al conectarme a la DB: " + e);
 		}
@@ -49,6 +54,7 @@ public class ConnectionDB {
 
 	public static void RollBack(Connection con) throws Exception {
 		try {
+			System.out.println("Inicio el RollBack");
 			if (con != null) {
 				con.rollback();
 			} else {

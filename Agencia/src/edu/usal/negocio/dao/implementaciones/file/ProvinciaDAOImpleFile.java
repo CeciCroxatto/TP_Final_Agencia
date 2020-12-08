@@ -11,18 +11,16 @@ public class ProvinciaDAOImpleFile implements ProvinciaDAO {
 
 	private List<Provincia> lProvinciaDAO;
 
-	public List<Provincia> getlProvinciaDAO() {
-		return lProvinciaDAO;
-	}
-
-	public void setlProvinciaDAO(List<Provincia> lProvinciaDAO) {
-		this.lProvinciaDAO = lProvinciaDAO;
-	}
+	/*
+	 * 
+	 * Funciones que usan la GUI y el Manager
+	 *
+	 */
 
 	@Override
 	public List<Provincia> cargarProvincias() {
 
-		this.lProvinciaDAO = new ArrayList();
+		this.lProvinciaDAO = new ArrayList<Provincia>();
 		FileIO IOfile = new FileIO();
 		String[] splitted = null;
 
@@ -33,6 +31,14 @@ public class ProvinciaDAOImpleFile implements ProvinciaDAO {
 		}
 
 		return this.lProvinciaDAO;
+	}
+
+	public List<Provincia> getlProvinciaDAO() {
+		return lProvinciaDAO;
+	}
+
+	public void setlProvinciaDAO(List<Provincia> lProvinciaDAO) {
+		this.lProvinciaDAO = lProvinciaDAO;
 	}
 
 }

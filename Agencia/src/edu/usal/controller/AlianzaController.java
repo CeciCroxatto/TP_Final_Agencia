@@ -24,9 +24,9 @@ public class AlianzaController {
 		this.lAlianzas = lAlianzas;
 	}
 
-	public void cargarAlianzas(String implementacion) {
+	public void cargarAlianzas() {
 
-		AlianzaDAO AlianzaDAO = AlianzaFactory.getImplementacion(implementacion);
+		AlianzaDAO AlianzaDAO = AlianzaFactory.getImplementacion("file");
 
 		this.lAlianzas = AlianzaDAO.cargarAlianzas();
 

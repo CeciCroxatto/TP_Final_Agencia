@@ -16,14 +16,11 @@ import edu.usal.util.ConnectionDB;
 
 public class VentaDAOImpleSQL implements VentaDAO {
 
-	@Override
-	public List<Venta> cargarVentas(ClienteController clientContr, VueloController vueloContr,
-			FormaDePagoController formaDPContr) {
-
-		ArrayList<Venta> listaVentas = new ArrayList<>();
-
-		return listaVentas;
-	}
+	/*
+	 * 
+	 * Funciones que usan la vista web
+	 *
+	 */
 
 	public String crearVenta(String cuil, int idVuelo, int idPago, double importe_vuelo, double importe_total) {
 
@@ -61,8 +58,8 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -112,8 +109,8 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -163,8 +160,8 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 			res.close();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -218,8 +215,8 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 			con.commit();
 			con.close();
-			if (con.isClosed())
-				System.out.println("Conexion cerrada");
+//			if (con.isClosed())
+//				System.out.println("Conexion cerrada");
 
 		} catch (SQLException e) {
 
@@ -234,6 +231,21 @@ public class VentaDAOImpleSQL implements VentaDAO {
 
 		return texto;
 
+	}
+
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
+	@Override
+	public List<Venta> cargarVentas(ClienteController clientContr, VueloController vueloContr,
+			FormaDePagoController formaDPContr) {
+
+		ArrayList<Venta> listaVentas = new ArrayList<>();
+
+		return listaVentas;
 	}
 
 }

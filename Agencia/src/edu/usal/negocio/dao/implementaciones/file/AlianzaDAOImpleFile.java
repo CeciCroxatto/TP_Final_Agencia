@@ -14,7 +14,7 @@ public class AlianzaDAOImpleFile implements AlianzaDAO {
 	@Override
 	public List<Alianza> cargarAlianzas() {
 
-		this.lAlianzaDAO = new ArrayList();
+		this.lAlianzaDAO = new ArrayList<Alianza>();
 		FileIO IOfile = new FileIO();
 		String idAlianza = null;
 

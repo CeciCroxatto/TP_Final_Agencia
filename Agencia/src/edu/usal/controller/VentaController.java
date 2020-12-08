@@ -1,10 +1,6 @@
 package edu.usal.controller;
 
-import edu.usal.negocio.dao.factory.VentaFactory;
-import edu.usal.negocio.dao.implementaciones.file.VentaDAOImpleFile;
 import edu.usal.negocio.dao.implementaciones.sql.VentaDAOImpleSQL;
-import edu.usal.negocio.dao.interfaces.VentaDAO;
-import edu.usal.negocio.dto.FormaDePago;
 import edu.usal.negocio.dto.Venta;
 import edu.usal.vista.VentaAltaVista;
 import edu.usal.vista.VentaBajaVista;
@@ -20,16 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class VentaController extends HttpServlet {
 
+	private static final long serialVersionUID = 1L;
+
 	private List<Venta> lVentas = null;
 	private ClienteController clienContr;
-	private VueloController vuelContr;
+//	private VueloController vuelContr;
 	private FormaDePagoController formPagContr;
 	private VentaAltaVista veAltaVista = null;
 	private VentaBajaVista veBajaVista = null;
@@ -39,51 +36,15 @@ public class VentaController extends HttpServlet {
 	public VentaController() {
 		this.lVentas = new ArrayList<Venta>();
 		this.clienContr = new ClienteController();
-		this.vuelContr = new VueloController();
+//		this.vuelContr = new VueloController();
 		this.formPagContr = new FormaDePagoController();
 	}
 
-	public List<Venta> getlVentas() {
-		return lVentas;
-	}
-
-	public void setlVentas(List<Venta> lVentas) {
-		this.lVentas = lVentas;
-	}
-
-	public void cargarVentas(String implementacion) {
-
-		VentaDAO VentaDAO = VentaFactory.getImplementacion(implementacion);
-
-		this.clienContr = new ClienteController();
-		clienContr.cargarClientes(implementacion);
-		this.vuelContr = new VueloController();
-		vuelContr.cargarVuelos(implementacion);
-		this.formPagContr = new FormaDePagoController();
-		formPagContr.cargarFormaDePagos();
-
-		this.lVentas = VentaDAO.cargarVentas(this.clienContr, this.vuelContr, this.formPagContr);
-
-	}
-
-	public void guardarVentas(String implementacion) {
-
-		VentaDAO ventaDAO = VentaFactory.getImplementacion(implementacion);
-
-		if (ventaDAO instanceof VentaDAOImpleFile)
-			((VentaDAOImpleFile) ventaDAO).guardarVentas(this.lVentas);
-
-	}
-
-	public Venta conseguirVenta(int idVenta) {
-
-		for (Venta c : this.lVentas) {
-			if (c.getIdVenta() == idVenta) {
-				return c;
-			}
-		}
-		return null;
-	}
+	/*
+	 * 
+	 * Funciones que usan la vista web
+	 *
+	 */
 
 	public String crearVenta(String cuil, int idVuelo, int idPago, double importe_vuelo, double importe_total) {
 
@@ -181,28 +142,18 @@ public class VentaController extends HttpServlet {
 
 			texto = "vacio";
 
-//			Date fechaEmisionPasaporte = this.clienContr.fechaEmisionPasaporte_por_CUIL(cuil);
-
-			Date fechaEmisionPasaporte = Calendar.getInstance().getTime();
-			fechaEmisionPasaporte.setDate(13);
-			fechaEmisionPasaporte.setMonth(2 - 1);
-			fechaEmisionPasaporte.setYear(00);
+			Date fechaEmisionPasaporte = this.clienContr.fechaEmisionPasaporte_por_CUIL(cuil);
 
 			if (fechaEmisionPasaporte != null) {
 
 //				Date fechaSalida = this.vuelContr.conseguirFechaDeSalida_por_ID(idVuelo);
 				Date fechaSalida = Calendar.getInstance().getTime();
-				fechaSalida.setDate(13);
-				fechaSalida.setMonth(2 - 1);
-				fechaSalida.setYear(01);
 
 				if (fechaSalida != null) {
 
 					if (fechaSalida.compareTo(fechaEmisionPasaporte) > 0) {
 
-//						Date fechaVencimientoPasaporte = this.clienContr.fechaVencimientoPasaporte_por_CUIL(cuil);
-						Date fechaVencimientoPasaporte = Calendar.getInstance().getTime();
-						fechaVencimientoPasaporte.setYear(2000);
+						Date fechaVencimientoPasaporte = this.clienContr.fechaVencimientoPasaporte_por_CUIL(cuil);
 
 //						Date fechaLlegada = this.vuelContr.conseguirFechaDeLlegada_por_ID(idVuelo);
 						Date fechaLlegada = Calendar.getInstance().getTime();
@@ -295,6 +246,54 @@ public class VentaController extends HttpServlet {
 
 		}
 
+	}
+
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+
+//	public void cargarVentas(String implementacion) {
+//
+//		VentaDAO VentaDAO = VentaFactory.getImplementacion(implementacion);
+//
+//		this.clienContr = new ClienteController();
+////		clienContr.cargarClientes(implementacion);
+//		this.vuelContr = new VueloController();
+//		vuelContr.cargarVuelos(implementacion);
+//		this.formPagContr = new FormaDePagoController();
+//		formPagContr.cargarFormaDePagos();
+//
+//		this.lVentas = VentaDAO.cargarVentas(this.clienContr, this.vuelContr, this.formPagContr);
+//
+//	}
+
+//	public void guardarVentas(String implementacion) {
+//
+//		VentaDAO ventaDAO = VentaFactory.getImplementacion(implementacion);
+//
+//		if (ventaDAO instanceof VentaDAOImpleFile)
+//			((VentaDAOImpleFile) ventaDAO).guardarVentas(this.lVentas);
+//
+//	}
+
+//	public Venta conseguirVenta(int idVenta) {
+//
+//		for (Venta c : this.lVentas) {
+//			if (c.getIdVenta() == idVenta) {
+//				return c;
+//			}
+//		}
+//		return null;
+//	}
+
+	public List<Venta> getlVentas() {
+		return lVentas;
+	}
+
+	public void setlVentas(List<Venta> lVentas) {
+		this.lVentas = lVentas;
 	}
 
 }

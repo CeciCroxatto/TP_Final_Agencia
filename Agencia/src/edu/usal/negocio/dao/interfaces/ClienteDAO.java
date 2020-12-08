@@ -6,17 +6,16 @@ import edu.usal.controller.PasaporteController;
 import edu.usal.controller.TelefonoController;
 import edu.usal.negocio.dto.Cliente;
 
-import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface ClienteDAO {
 
-	public int agregarCliente(Cliente cliente, Connection con) throws IOException;
-
-	public List<Cliente> cargarClientes(PasaporteController pasapContr, TelefonoController telefContr,
-			PasajeroFrecuenteController pasajFContr, DireccionController direcContr);
+	/*
+	 * 
+	 * Funciones que usan la GUI y sin Manager
+	 *
+	 */
 
 	public String crearClienteGUI(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
 			String paisPasaporte, String provinciaPasaporte, String autoridadPasaporte, String fechaEmisionS,
@@ -34,4 +33,11 @@ public interface ClienteDAO {
 			String fechNac, String nroPF, String nombreLA, String categoriaPF, String email, String calleDir,
 			String calleAlt, String ciudadDir, String paisDir, String provDir, String cpDir);
 
+	/*
+	 * 
+	 * Funciones en desuso
+	 *
+	 */
+	public List<Cliente> cargarClientes(PasaporteController pasapContr, TelefonoController telefContr,
+			PasajeroFrecuenteController pasajFContr, DireccionController direcContr);
 }

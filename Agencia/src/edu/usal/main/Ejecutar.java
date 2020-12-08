@@ -7,7 +7,7 @@ public class Ejecutar {
 
 	public static void main(String[] args) {
 
-		System.out.println("/n/nBienvenido!!/n/n");
+		System.out.println("\n\nBienvenido!!\n\nCargando datos, por favor espere");
 
 		// Cliente CRUD
 

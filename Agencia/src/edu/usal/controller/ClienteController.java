@@ -46,8 +46,6 @@ public class ClienteController extends HttpServlet implements ActionListener {
 	private ProvinciaController provContr;
 	private LineaAereaController laContr;
 
-	private ClienteManager clienteManager;
-
 	// vistas html
 	private ClienteAltaVista clAltaVista = null;
 	private ClienteBajaVista clBajaVista = null;
@@ -69,7 +67,6 @@ public class ClienteController extends HttpServlet implements ActionListener {
 		this.paisContr = new PaisController();
 		this.provContr = new ProvinciaController();
 		this.laContr = new LineaAereaController();
-		this.clienteManager = new ClienteManager();
 
 	}
 
@@ -79,91 +76,46 @@ public class ClienteController extends HttpServlet implements ActionListener {
 	 *
 	 */
 
-	public void crearClienteGUI(String implementacion, String nombre, String apellido, String dni, String cuil,
+	public Cliente crearClienteGUI(String implementacion, String nombre, String apellido, String dni, String cuil,
 			String nroPasaporte, String paisPasaporte, String provinciaPasaporte, String autoridadPasaporte,
 			String fechaEmisionS, String vencimientoS, String telefpers, String telefcelul, String teleflabor,
 			String fechNac, String nroPF, String nombreLA, String categoriaPF, String email, String calleDir,
 			String calleAlt, String ciudadDir, String paisDir, String provDir, String cpDir) {
 
-		String s1 = null;
-		String s2 = null;
-		String s3 = null;
+		Cliente cliente = null;
+		Date fechEmision = null;
+		Date vencimiento = null;
+		Date fechaNac = null;
 
-		s1 = vecesCuil(cuil, "SQL");
-		s2 = this.pasapContr.vecesPasaporte(nroPasaporte, "SQL");
-		s3 = this.pasajFContr.vecesPasajeroFrecuente(nroPF, "SQL");
-		int cantidadRegistrosAlterados = 0;
-
-		if (s1.matches("0")) {
-
-			if (s2.matches("0")) {
-
-				if (s3.matches("0")) {
-
-					Date fechEmision = null;
-					Date vencimiento = null;
-					Date fechaNac = null;
-
-					try {
-						fechEmision = new SimpleDateFormat("MM-dd-yyyy").parse(fechaEmisionS);
-						vencimiento = new SimpleDateFormat("MM-dd-yyyy").parse(vencimientoS);
-						fechaNac = new SimpleDateFormat("MM-dd-yyyy").parse(fechNac);
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-
-					Direccion direccion = this.direcContr.nuevaDireccion(calleDir, calleAlt, ciudadDir, paisDir,
-							provDir, cpDir);
-					Pasaporte pasaporte = this.pasapContr.nuevoPasaporte(nroPasaporte, paisPasaporte,
-							provinciaPasaporte, autoridadPasaporte, fechEmision, vencimiento);
-					Telefono telefono = this.telefContr.nuevoTelefono(telefpers, telefcelul, teleflabor);
-					PasajeroFrecuente pasajeroFrecuente = this.pasajFContr.nuevoPasajeroFrecuente(nroPF, nombreLA,
-							categoriaPF);
-					Cliente cliente = this.nuevoCliente(nombre, apellido, dni, cuil, fechaNac, email);
-
-					cantidadRegistrosAlterados = this.clienteManager.altaClienteUnificado(direccion, pasaporte,
-							telefono, pasajeroFrecuente, cliente);
-
-					if (cantidadRegistrosAlterados == 5) {
-						this.clCVista.mostrarmensaje("Cliente dado de alta exitosamente");
-					} else {
-						this.clCVista.mostrarmensaje("Hubo un error");
-					}
-
-				} else {
-					this.clCVista.mostrarmensaje("El pasajero frecuente ya pertenece a un cliente");
-				}
-
-			} else {
-				this.clCVista.mostrarmensaje("El pasaporte ya pertenece a un cliente");
-			}
-
-		} else {
-			this.clCVista.mostrarmensaje("El cuil ya pertenece a un cliente");
+		try {
+			fechEmision = new SimpleDateFormat("MM-dd-yyyy").parse(fechaEmisionS);
+			vencimiento = new SimpleDateFormat("MM-dd-yyyy").parse(vencimientoS);
+			fechaNac = new SimpleDateFormat("MM-dd-yyyy").parse(fechNac);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 
-//		String mensaje = null;		
-//
-//		mensaje = clienteDAO.crearClienteGUI(nombre, apellido, dni, cuil, nroPasaporte, paisPasaporte,
-//				provinciaPasaporte, autoridadPasaporte, fechaEmisionS, vencimientoS, telefpers, telefcelul, teleflabor,
-//				fechNac, nroPF, nombreLA, categoriaPF, email, calleDir, calleAlt, ciudadDir, paisDir, provDir, cpDir);
-//
-//		if (mensaje.matches("OK\n")) {
-//
-//			this.clCVista.mostrarmensaje("Cliente agregado a la base correctamente");
-//			this.clCVista.otraAlta();
-//
-//		} else {
-//			this.clCVista.mostrarmensaje(mensaje);
-//		}
+		Direccion direccion = this.direcContr.nuevaDireccion(calleDir, calleAlt, ciudadDir, paisDir, provDir, cpDir);
+		Pasaporte pasaporte = this.pasapContr.nuevoPasaporte(nroPasaporte, paisPasaporte, provinciaPasaporte,
+				autoridadPasaporte, fechEmision, vencimiento);
+		Telefono telefono = this.telefContr.nuevoTelefono(telefpers, telefcelul, teleflabor);
+		PasajeroFrecuente pasajeroFrecuente = this.pasajFContr.nuevoPasajeroFrecuente(nroPF, nombreLA, categoriaPF);
+		cliente = this.nuevoCliente(nombre, apellido, dni, cuil, fechaNac, email);
+
+		cliente.setPasaporte(pasaporte);
+		cliente.setTelefono(telefono);
+		cliente.setPasajeroFrecuente(pasajeroFrecuente);
+		cliente.setDireccion(direccion);
+
+		return cliente;
 
 	}
 
-	public String vecesCuil(String cuil, String implementacion) {
+	public int vecesCuil(String cuil, String implementacion) {
 
 		ClienteDAO clienteDAO = ClienteFactory.getImplementacion(implementacion);
 
-		return ((ClienteDAOImpleSQL) clienteDAO).vecesCuil(cuil);
+		return Integer.parseInt(((ClienteDAOImpleSQL) clienteDAO).vecesCuil(cuil));
 
 	}
 
@@ -182,6 +134,8 @@ public class ClienteController extends HttpServlet implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		// 4 x btnLimpiar
+
 		if (e.getSource() == this.clCVista.btnLimpiar) {
 			this.clCVista.limpiarConConfirmacion();
 		}
@@ -198,147 +152,6 @@ public class ClienteController extends HttpServlet implements ActionListener {
 			this.clDVista.limpiarConConfirmacion();
 		}
 
-		if (e.getSource() == this.clRVista.btnConsultar) {
-			consultarCliente_porCUILGUI("SQL", this.clRVista.getTextField_cuil().getText(), this.clRVista);
-		}
-
-		if (e.getSource() == this.clDVista.btnConsultar) {
-			consultarCliente_porCUILGUI("SQL", this.clDVista.getTextField_cuil().getText(), this.clDVista);
-		}
-
-		if (e.getSource() == this.clDVista.btnBorrar) {
-			borrarCliente_porCUILGUI("SQL", this.clDVista.getTextField_cuil().getText());
-
-		}
-
-		if (e.getSource() == this.clUVista.btnConsultar) {
-			consultarCliente_porCUILGUI("SQL", this.clUVista.getTextField_cuil().getText(), this.clUVista);
-		}
-
-	}
-
-	/*
-	 * 
-	 * Funciones que usan la GUI y sin Manager
-	 *
-	 */
-
-	public void consultarCliente_porCUILGUI(String implementacion, String cuil, Object vista) {
-
-		ArrayList<String> lDatos = new ArrayList<>();
-
-		ClienteDAO clienteDAO = ClienteFactory.getImplementacion(implementacion);
-
-		lDatos = clienteDAO.consultarCliente_porCUILGUI(cuil);
-
-		if (vista.getClass() == this.clRVista.getClass()) {
-			if (lDatos.size() == 1) {
-
-				this.clRVista.mostrarmensaje(lDatos.get(0));
-				this.clRVista.otraConsulta();
-
-			} else {
-				this.clRVista.llenarDatos(lDatos);
-			}
-		}
-
-		if (vista.getClass() == this.clUVista.getClass()) {
-			if (lDatos.size() == 1) {
-				this.clUVista.mostrarmensaje(lDatos.get(0));
-				this.clUVista.otraConsulta();
-
-			} else {
-				this.clUVista.llenarDatos(lDatos);
-				this.clUVista.getTextField_cuil().setEditable(false);
-//				this.clUVista.getTextField_cuil().setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			}
-		}
-
-		if (vista.getClass() == this.clDVista.getClass()) {
-			if (lDatos.size() == 1) {
-				this.clDVista.mostrarmensaje(lDatos.get(0));
-				this.clDVista.otraConsulta();
-
-			} else {
-				this.clDVista.llenarDatos(lDatos);
-			}
-		}
-
-	}
-
-	public void borrarCliente_porCUILGUI(String implementacion, String cuil) {
-
-		String mensaje = null;
-
-		ClienteDAO clienteDAO = ClienteFactory.getImplementacion(implementacion);
-
-		mensaje = clienteDAO.borrarCliente_porCUILGUI(cuil);
-
-		if (mensaje.matches("OK\n")) {
-			this.clDVista.mostrarmensaje("Cliente eliminado de la base correctamente");
-			this.clDVista.otroBorrar();
-
-		} else {
-			this.clDVista.mostrarmensaje(mensaje);
-		}
-
-	}
-
-	public void modificarCliente_porCUILGUI(String implementacion, String nombre, String apellido, String dni,
-			String cuil, String nroPasaporte, String paisPasaporte, String provinciaPasaporte,
-			String autoridadPasaporte, String fechaEmisionS, String vencimientoS, String telefpers, String telefcelul,
-			String teleflabor, String fechNac, String nroPF, String nombreLA, String categoriaPF, String email,
-			String calleDir, String calleAlt, String ciudadDir, String paisDir, String provDir, String cpDir) {
-
-		String mensaje = null;
-
-		ClienteDAO clienteDAO = ClienteFactory.getImplementacion(implementacion);
-
-		mensaje = clienteDAO.modificarCliente_porCUILGUI(nombre, apellido, dni, cuil, nroPasaporte, paisPasaporte,
-				provinciaPasaporte, autoridadPasaporte, fechaEmisionS, vencimientoS, telefpers, telefcelul, teleflabor,
-				fechNac, nroPF, nombreLA, categoriaPF, email, calleDir, calleAlt, ciudadDir, paisDir, provDir, cpDir);
-
-		if (mensaje.matches("OK\n")) {
-
-			this.clUVista.mostrarmensaje("Cliente actualizado en la base correctamente");
-			this.clUVista.otroActualizar();
-
-		} else {
-			this.clUVista.mostrarmensaje(mensaje);
-		}
-
-	}
-
-	public int crearCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
-			String fechNac, String email, int idTelefono, String nroPF, int idDireccion) {
-
-		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
-		return clienteDAOImpleSQL.crearCliente(nombre, apellido, dni, cuil, nroPasaporte, fechNac, email, idTelefono,
-				nroPF, idDireccion);
-
-	}
-
-	public int bajarCliente(String cuil) {
-
-		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
-		return clienteDAOImpleSQL.bajarCliente(cuil);
-
-	}
-
-	public String consultarCliente(String cuil) {
-
-		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
-		return clienteDAOImpleSQL.consultarCliente(cuil);
-
-	}
-
-	public int modificarCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
-			String fechNac, String email, int idTelefono, String nroPF, int idDireccion) {
-
-		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
-		return clienteDAOImpleSQL.modificarCliente(nombre, apellido, dni, cuil, nroPasaporte, fechNac, email,
-				idTelefono, nroPF, idDireccion);
-
 	}
 
 	/*
@@ -347,27 +160,27 @@ public class ClienteController extends HttpServlet implements ActionListener {
 	 *
 	 */
 
-	public void crearVistas() {
-		crearVistaC();
-		crearVistaR();
-		crearVistaU();
-		crearVistaD();
+	public void crearVistas(ClienteManager clienteManager) {
+		crearVistaC(clienteManager);
+		crearVistaR(clienteManager);
+		crearVistaU(clienteManager);
+		crearVistaD(clienteManager);
 	}
 
-	public void crearVistaC() {
-		this.clCVista = new ClienteCVista2(this);
+	public void crearVistaC(ClienteManager clienteManager) {
+		this.clCVista = new ClienteCVista2(clienteManager);
 	}
 
-	public void crearVistaR() {
-		this.clRVista = new ClienteRVista2(this);
+	public void crearVistaR(ClienteManager clienteManager) {
+		this.clRVista = new ClienteRVista2(clienteManager);
 	}
 
-	public void crearVistaU() {
-		this.clUVista = new ClienteUVista2(this);
+	public void crearVistaU(ClienteManager clienteManager) {
+		this.clUVista = new ClienteUVista2(clienteManager);
 	}
 
-	public void crearVistaD() {
-		this.clDVista = new ClienteDVista2(this);
+	public void crearVistaD(ClienteManager clienteManager) {
+		this.clDVista = new ClienteDVista2(clienteManager);
 	}
 
 	/*
@@ -582,6 +395,38 @@ public class ClienteController extends HttpServlet implements ActionListener {
 	 * Funciones en desuso
 	 *
 	 */
+
+	public int crearCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
+			String fechNac, String email, int idTelefono, String nroPF, int idDireccion) {
+
+		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
+		return clienteDAOImpleSQL.crearCliente(nombre, apellido, dni, cuil, nroPasaporte, fechNac, email, idTelefono,
+				nroPF, idDireccion);
+
+	}
+
+	public int bajarCliente(String cuil) {
+
+		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
+		return clienteDAOImpleSQL.bajarCliente(cuil);
+
+	}
+
+	public String consultarCliente(String cuil) {
+
+		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
+		return clienteDAOImpleSQL.consultarCliente(cuil);
+
+	}
+
+	public int modificarCliente(String nombre, String apellido, String dni, String cuil, String nroPasaporte,
+			String fechNac, String email, int idTelefono, String nroPF, int idDireccion) {
+
+		ClienteDAOImpleSQL clienteDAOImpleSQL = new ClienteDAOImpleSQL();
+		return clienteDAOImpleSQL.modificarCliente(nombre, apellido, dni, cuil, nroPasaporte, fechNac, email,
+				idTelefono, nroPF, idDireccion);
+
+	}
 
 //	public void cargarClientes(String implementacion) {
 //

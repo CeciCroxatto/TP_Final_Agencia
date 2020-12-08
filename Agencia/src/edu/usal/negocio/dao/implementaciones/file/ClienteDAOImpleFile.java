@@ -7,8 +7,6 @@ import edu.usal.controller.PasajeroFrecuenteController;
 import edu.usal.controller.PasaporteController;
 import edu.usal.controller.TelefonoController;
 
-import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +27,6 @@ public class ClienteDAOImpleFile implements ClienteDAO {
 	 * Funciones en desuso
 	 *
 	 */
-
-	@Override
-	public int agregarCliente(Cliente cliente, Connection con) throws IOException {
-		// no implementado
-		return 0;
-	}
 
 	@Override
 	public String modificarCliente_porCUILGUI(String nombre, String apellido, String dni, String cuil,

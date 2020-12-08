@@ -5,9 +5,6 @@ import edu.usal.negocio.dao.factory.PasaporteFactory;
 import edu.usal.negocio.dao.implementaciones.sql.PasaporteDAOImpleSQL;
 import edu.usal.negocio.dao.interfaces.PasaporteDAO;
 import edu.usal.negocio.dto.Pais;
-import edu.usal.negocio.dto.PaisArgentina;
-import edu.usal.negocio.dto.PaisOtro;
-import edu.usal.negocio.dto.Provincia;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,12 +14,10 @@ public class PasaporteController {
 
 	private List<Pasaporte> lPasaportes = null;
 	private PaisController paisContr = null;
-	private ProvinciaController provContr = null;
 
 	public PasaporteController() {
 		this.lPasaportes = new ArrayList<Pasaporte>();
 		this.paisContr = new PaisController();
-		this.provContr = new ProvinciaController();
 	}
 
 	/*
@@ -31,25 +26,18 @@ public class PasaporteController {
 	 *
 	 */
 
-	public String vecesPasaporte(String nroPasaporte, String implementacion) {
+	public int vecesPasaporte(String nroPasaporte, String implementacion) {
 
 		PasaporteDAO pasaporteDAO = PasaporteFactory.getImplementacion(implementacion);
 
-		return ((PasaporteDAOImpleSQL) pasaporteDAO).vecesPasaporte(nroPasaporte);
+		return Integer.parseInt(((PasaporteDAOImpleSQL) pasaporteDAO).vecesPasaporte(nroPasaporte));
 
 	}
 
 	public Pasaporte nuevoPasaporte(String nroPasaporte, String paisS, String provinciaS, String autoridad,
 			Date fechEmision, Date vencimiento) {
 
-		Pais pais = this.paisContr.conseguirPais_porDescripcion(paisS);
-		Provincia provincia = this.provContr.conseguirProvincia_porDescripcion(provinciaS);
-
-		if (paisS.matches("Argentina")) {
-			((PaisArgentina) pais).setProvincia(provincia);
-		} else {
-			((PaisOtro) pais).setProvEstado(provinciaS);
-		}
+		Pais pais = this.paisContr.conseguirPais_porDescripciones(paisS, provinciaS);
 
 		Pasaporte pasaporte = new Pasaporte(nroPasaporte, pais, autoridad, fechEmision, vencimiento);
 		return pasaporte;
@@ -183,6 +171,14 @@ public class PasaporteController {
 
 	public void setlPasaportes(List<Pasaporte> lPasaportes) {
 		this.lPasaportes = lPasaportes;
+	}
+
+	public PaisController getPaisContr() {
+		return paisContr;
+	}
+
+	public void setPaisContr(PaisController paisContr) {
+		this.paisContr = paisContr;
 	}
 
 }

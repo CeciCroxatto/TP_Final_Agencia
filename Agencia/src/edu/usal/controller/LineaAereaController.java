@@ -36,6 +36,25 @@ public class LineaAereaController extends HttpServlet {
 		this.alianContr = new AlianzaController();
 	}
 
+	/*
+	 * 
+	 * Funciones que usan la GUI y Manager
+	 *
+	 */
+
+	public LineaAerea conseguirLineaAerea_porNombre(String nombre) {
+
+		cargarLineaAereas("SQL");
+		LineaAerea lineaAerea = null;
+
+		for (LineaAerea la : this.lLineaAereas) {
+			if (la.getNombre().equals(nombre)) {
+				lineaAerea = la;
+			}
+		}
+		return lineaAerea;
+	}
+
 	public void cargarLineaAereas(String implementacion) {
 
 		LineaAereaDAO lineaAereaDAO = LineaAereaFactory.getImplementacion(implementacion);
@@ -51,24 +70,6 @@ public class LineaAereaController extends HttpServlet {
 			this.lLineasAereasNombre[i] = this.lLineaAereas.get(i).getNombre();
 		}
 
-	}
-
-	/*
-	 * 
-	 * Funciones que usan la GUI y Manager
-	 *
-	 */
-
-	public LineaAerea conseguirLineaAerea(String nombre) {
-
-		cargarLineaAereas("SQL");
-
-		for (LineaAerea lineaAerea : this.lLineaAereas) {
-			if (lineaAerea.getNombre().equals(nombre)) {
-				return lineaAerea;
-			}
-		}
-		return null;
 	}
 
 	/*

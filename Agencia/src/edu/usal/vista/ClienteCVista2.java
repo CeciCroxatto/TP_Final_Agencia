@@ -20,6 +20,7 @@ import javax.swing.border.LineBorder;
 import com.toedter.calendar.JDateChooser;
 
 import edu.usal.controller.ClienteController;
+import edu.usal.manager.ClienteManager;
 import edu.usal.util.ValidableTextField;
 import java.awt.Font;
 
@@ -27,7 +28,7 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 
 	private static final long serialVersionUID = 1L;
 
-	ClienteController clientContr;
+	ClienteManager clienteManager;
 
 	// Datos del cliente
 	private JTextField textField_nombre;
@@ -83,9 +84,9 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 	public JButton btnDarDeAlta;
 	public JButton btnLimpiar;
 
-	public ClienteCVista2(ClienteController clientContr) {
+	public ClienteCVista2(ClienteManager clienteManager) {
 
-		this.clientContr = clientContr;
+		this.clienteManager = clienteManager;
 		setLayout(null);
 
 		JLabel lblClientes = new JLabel("Alta de Clientes");
@@ -198,7 +199,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		varPpais.setFont(new Font("Tahoma", Font.BOLD, 11));
 		add(varPpais);
 
-		this.comboPPaisesDescrip = new JComboBox<String>(clientContr.getPaisContr().getlPaisesDescrip());
+		this.comboPPaisesDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getPaisContr().getlPaisesDescrip());
 		this.comboPPaisesDescrip.setBounds(88, 193, 87, 20);
 		add(this.comboPPaisesDescrip);
 		this.comboPPaisesDescrip.addItemListener(this);
@@ -221,7 +223,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		add(this.varPProvincia);
 		this.varPProvincia.setVisible(false);
 
-		this.comboPProvinciasDescrip = new JComboBox<String>(clientContr.getProvContr().getlProvinciasDescrip());
+		this.comboPProvinciasDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getProvContr().getlProvinciasDescrip());
 		this.comboPProvinciasDescrip.setBounds(259, 196, 87, 20);
 		add(this.comboPProvinciasDescrip);
 		this.comboPProvinciasDescrip.setVisible(false);
@@ -318,7 +321,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		varDpais.setFont(new Font("Tahoma", Font.BOLD, 11));
 		add(varDpais);
 
-		this.comboDPaisesDescrip = new JComboBox<String>(clientContr.getPaisContr().getlPaisesDescrip());
+		this.comboDPaisesDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getPaisContr().getlPaisesDescrip());
 		this.comboDPaisesDescrip.setBounds(88, 336, 87, 20);
 		add(this.comboDPaisesDescrip);
 		this.comboDPaisesDescrip.addItemListener(this);
@@ -341,7 +345,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		add(this.varDDirProvincia);
 		this.varDDirProvincia.setVisible(false);
 
-		this.comboDirProvinciasDescrip = new JComboBox<String>(clientContr.getProvContr().getlProvinciasDescrip());
+		this.comboDirProvinciasDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getProvContr().getlProvinciasDescrip());
 		this.comboDirProvinciasDescrip.setBounds(259, 337, 86, 20);
 		add(this.comboDirProvinciasDescrip);
 		this.comboDirProvinciasDescrip.setVisible(false);
@@ -388,7 +393,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		varPFlineaAerea.setBounds(177, 429, 72, 14);
 		add(varPFlineaAerea);
 
-		comboPFlineaAereaNombre = new JComboBox<String>(clientContr.getLaContr().getlLineasAereasNombre());
+		comboPFlineaAereaNombre = new JComboBox<String>(
+				this.clienteManager.getClienteController().getLaContr().getlLineasAereasNombre());
 		comboPFlineaAereaNombre.setBounds(253, 426, 87, 20);
 		add(comboPFlineaAereaNombre);
 
@@ -410,7 +416,7 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 		btnLimpiar = new JButton("Cancelar");
 		btnLimpiar.setBounds(284, 485, 120, 23);
 		add(btnLimpiar);
-		btnLimpiar.addActionListener(clientContr);
+		btnLimpiar.addActionListener(this.clienteManager.getClienteController());
 
 	}
 
@@ -855,8 +861,8 @@ public class ClienteCVista2 extends JPanel implements ItemListener, ActionListen
 																																												.getBorder()))
 																																														.getLineColor() == Color.BLACK) {
 
-																																											clientContr
-																																													.crearClienteGUI(
+																																											clienteManager
+																																													.altaClienteUnificado(
 																																															"SQL",
 																																															textField_nombre
 																																																	.getText(),

@@ -2,9 +2,6 @@ package edu.usal.controller;
 
 import edu.usal.negocio.dto.Direccion;
 import edu.usal.negocio.dto.Pais;
-import edu.usal.negocio.dto.PaisArgentina;
-import edu.usal.negocio.dto.PaisOtro;
-import edu.usal.negocio.dto.Provincia;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -13,12 +10,10 @@ public class DireccionController {
 
 	private List<Direccion> lDirecciones = null;
 	private PaisController paisContr = null;
-	private ProvinciaController provContr = null;
 
 	public DireccionController() {
 		this.lDirecciones = new ArrayList<Direccion>();
 		this.paisContr = new PaisController();
-		this.provContr = new ProvinciaController();
 
 	}
 
@@ -31,14 +26,7 @@ public class DireccionController {
 	public Direccion nuevaDireccion(String calle, String altura, String ciudad, String paisS, String provinciaS,
 			String cp) {
 
-		Pais pais = this.paisContr.conseguirPais_porDescripcion(paisS);
-		Provincia provincia = this.provContr.conseguirProvincia_porDescripcion(provinciaS);
-
-		if (paisS.matches("Argentina")) {
-			((PaisArgentina) pais).setProvincia(provincia);
-		} else {
-			((PaisOtro) pais).setProvEstado(provinciaS);
-		}
+		Pais pais = this.paisContr.conseguirPais_porDescripciones(paisS, provinciaS);
 
 		Direccion direccion = new Direccion();
 		direccion.setCalle(calle);

@@ -24,17 +24,17 @@ public class PasajeroFrecuenteController {
 	 *
 	 */
 
-	public String vecesPasajeroFrecuente(String nroPF, String implementacion) {
+	public int vecesPasajeroFrecuente(String nroPF, String implementacion) {
 
 		PasajeroFrecuenteDAO pasajeroFrecuenteDAO = PasajeroFrecuenteFactory.getImplementacion(implementacion);
 
-		return ((PasajeroFrecuenteDAOImpleSQL) pasajeroFrecuenteDAO).vecesPasajeroFrecuente(nroPF);
+		return Integer.parseInt(((PasajeroFrecuenteDAOImpleSQL) pasajeroFrecuenteDAO).vecesPasajeroFrecuente(nroPF));
 
 	}
 
 	public PasajeroFrecuente nuevoPasajeroFrecuente(String nroPF, String lineaAerea, String categoria) {
 
-		return new PasajeroFrecuente(nroPF, this.linAerContr.conseguirLineaAerea(lineaAerea), categoria);
+		return new PasajeroFrecuente(nroPF, this.linAerContr.conseguirLineaAerea_porNombre(lineaAerea), categoria);
 
 	}
 
@@ -82,6 +82,14 @@ public class PasajeroFrecuenteController {
 
 	public void setlPasajeroFrecuentes(List<PasajeroFrecuente> lPasajeroFrecuentes) {
 		this.lPasajeroFrecuentes = lPasajeroFrecuentes;
+	}
+
+	public LineaAereaController getLinAerContr() {
+		return linAerContr;
+	}
+
+	public void setLinAerContr(LineaAereaController linAerContr) {
+		this.linAerContr = linAerContr;
 	}
 
 }

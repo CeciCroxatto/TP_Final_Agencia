@@ -7,17 +7,21 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
-import edu.usal.controller.ClienteController;
+import edu.usal.manager.ClienteManager;
 import edu.usal.util.ValidableTextField;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ClienteRVista2 extends JPanel {
+public class ClienteRVista2 extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	ClienteController clientContr;
+	ClienteManager clienteManager;
 
 	// Datos del cliente
 	private JLabel lblDatosGenerales;
@@ -104,8 +108,8 @@ public class ClienteRVista2 extends JPanel {
 	public JButton btnConsultar;
 	public JButton btnLimpiar;
 
-	public ClienteRVista2(ClienteController clientContr) {
-		this.clientContr = clientContr;
+	public ClienteRVista2(ClienteManager clienteManager) {
+		this.clienteManager = clienteManager;
 		setLayout(null);
 
 		JLabel lblClientes = new JLabel("Consulta de Clientes");
@@ -164,7 +168,7 @@ public class ClienteRVista2 extends JPanel {
 		add(varDPCuil);
 		varDPCuil.setVisible(true);
 
-		textField_cuil = new JTextField();
+		textField_cuil = new ValidableTextField("^(20|23|27)([0-9]{9})$");
 		textField_cuil.setBounds(197, 15, 86, 20);
 		textField_cuil.setColumns(10);
 		add(textField_cuil);
@@ -508,13 +512,35 @@ public class ClienteRVista2 extends JPanel {
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.setBounds(302, 13, 134, 23);
 		add(btnConsultar);
-		btnConsultar.addActionListener(clientContr);
+		btnConsultar.addActionListener(this);
 
 		btnLimpiar = new JButton("Cancelar");
 		btnLimpiar.setBounds(177, 484, 120, 23);
 		add(btnLimpiar);
-		btnLimpiar.addActionListener(clientContr);
+		btnLimpiar.addActionListener(this.clienteManager.getClienteController());
 		btnLimpiar.setVisible(false);
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent action) {
+
+		// 1 x btnConsultar
+
+		if (action.getSource() == btnConsultar) {
+
+			if (getTextField_cuil().getText().length() > 0) {
+				if (((LineBorder) (textField_cuil.getBorder())).getLineColor() == Color.BLACK) {
+					clienteManager.consultaClienteUnificado("SQL", getTextField_cuil().getText(), this);
+
+				} else {
+					cartelErrorIngresoDatos("CUIL: 11 digitos, que empiece con 20/23/27");
+				}
+			} else {
+				cartelErrorIngresoDatos("CUIL: Campo obligatorio");
+			}
+
+		}
 
 	}
 

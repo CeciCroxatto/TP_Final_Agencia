@@ -10,7 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-import edu.usal.controller.ClienteController;
+import edu.usal.manager.ClienteManager;
 
 public class MenuVista implements ActionListener {
 
@@ -28,7 +28,7 @@ public class MenuVista implements ActionListener {
 	private JPanel consultaCliente;
 	private JPanel modificacionCliente;
 
-	ClienteController clientContr;
+	ClienteManager clienteManager;
 
 	public MenuVista() {
 
@@ -64,13 +64,13 @@ public class MenuVista implements ActionListener {
 		frame.getContentPane().add(panelPivot);
 		panelPivot.setLayout(new CardLayout(0, 0));
 
-		this.clientContr = new ClienteController();
-		clientContr.cargarPaises();
-		clientContr.cargarProvincias();
-		clientContr.cargarLineasAereas("SQL");
-		clientContr.crearVistas();
+		this.clienteManager = new ClienteManager();
+		clienteManager.getClienteController().cargarPaises();
+		clienteManager.getClienteController().cargarProvincias();
+		clienteManager.getClienteController().cargarLineasAereas("SQL");
+		clienteManager.getClienteController().crearVistas(clienteManager);
 
-		altaCliente = clientContr.getClCVista();
+		altaCliente = clienteManager.getClienteController().getClCVista();
 		panelPivot.add(altaCliente);
 		panelPivot.setVisible(true);
 		panelPivot.validate();
@@ -83,8 +83,8 @@ public class MenuVista implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == menuItemCCliente) {
-			clientContr.crearVistaC();
-			altaCliente = clientContr.getClCVista();
+			clienteManager.getClienteController().crearVistaC(clienteManager);
+			altaCliente = clienteManager.getClienteController().getClCVista();
 			panelPivot.removeAll();
 			panelPivot.add(altaCliente);
 			panelPivot.setVisible(true);
@@ -92,8 +92,8 @@ public class MenuVista implements ActionListener {
 		}
 
 		if (e.getSource() == menuItemRCliente) {
-			clientContr.crearVistaR();
-			consultaCliente = clientContr.getClRVista();
+			clienteManager.getClienteController().crearVistaR(clienteManager);
+			consultaCliente = clienteManager.getClienteController().getClRVista();
 			panelPivot.removeAll();
 			panelPivot.add(consultaCliente);
 			panelPivot.setVisible(true);
@@ -101,8 +101,8 @@ public class MenuVista implements ActionListener {
 		}
 
 		if (e.getSource() == menuItemUCliente) {
-			clientContr.crearVistaU();
-			modificacionCliente = clientContr.getClUVista();
+			clienteManager.getClienteController().crearVistaU(clienteManager);
+			modificacionCliente = clienteManager.getClienteController().getClUVista();
 			panelPivot.removeAll();
 			panelPivot.add(modificacionCliente);
 			panelPivot.setVisible(true);
@@ -110,8 +110,8 @@ public class MenuVista implements ActionListener {
 		}
 
 		if (e.getSource() == menuItemDCliente) {
-			clientContr.crearVistaD();
-			bajaCliente = clientContr.getClDVista();
+			clienteManager.getClienteController().crearVistaD(clienteManager);
+			bajaCliente = clienteManager.getClienteController().getClDVista();
 			panelPivot.removeAll();
 			panelPivot.add(bajaCliente);
 			panelPivot.setVisible(true);

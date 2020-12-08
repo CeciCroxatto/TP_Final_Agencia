@@ -33,6 +33,8 @@ public class AlianzaController {
 	}
 
 	public Alianza conseguirAlianza(String idAlianza) {
+		
+		cargarAlianzas();
 
 		for (Alianza alianza : this.lAlianzas) {
 			if (alianza.getIdAlianza().equals(idAlianza)) {

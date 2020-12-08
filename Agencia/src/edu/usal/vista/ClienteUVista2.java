@@ -23,7 +23,7 @@ import javax.swing.border.LineBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import edu.usal.controller.ClienteController;
+import edu.usal.manager.ClienteManager;
 import edu.usal.util.ValidableTextField;
 
 import java.awt.Font;
@@ -32,7 +32,7 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 
 	private static final long serialVersionUID = 1L;
 
-	ClienteController clientContr;
+	ClienteManager clienteManager;
 
 	// Datos del cliente
 	private JLabel lblDatosGenerales;
@@ -120,8 +120,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 	public JButton btnLimpiar;
 	public JButton btnModificar;
 
-	public ClienteUVista2(ClienteController clientContr) {
-		this.clientContr = clientContr;
+	public ClienteUVista2(ClienteManager clienteManager) {
+		this.clienteManager = clienteManager;
 		setLayout(null);
 
 		JLabel lblClientes = new JLabel("Modificacion de Clientes");
@@ -180,7 +180,7 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(varDPCuil);
 		varDPCuil.setVisible(true);
 
-		textField_cuil = new JTextField();
+		textField_cuil = new ValidableTextField("^(20|23|27)([0-9]{9})$");
 		textField_cuil.setBounds(255, 17, 86, 20);
 		textField_cuil.setColumns(10);
 		add(textField_cuil);
@@ -266,7 +266,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(varPpais);
 		varPpais.setVisible(false);
 
-		this.comboPPaisesDescrip = new JComboBox<String>(clientContr.getPaisContr().getlPaisesDescrip());
+		this.comboPPaisesDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getPaisContr().getlPaisesDescrip());
 //		this.comboPPaisesDescrip = new JTextField();
 		this.comboPPaisesDescrip.setBounds(88, 193, 87, 20);
 		add(this.comboPPaisesDescrip);
@@ -293,7 +294,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(this.varPProvincia);
 		this.varPProvincia.setVisible(false);
 
-		this.comboPProvinciasDescrip = new JComboBox<String>(clientContr.getProvContr().getlProvinciasDescrip());
+		this.comboPProvinciasDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getProvContr().getlProvinciasDescrip());
 //		this.comboPProvinciasDescrip = new JTextField();
 		this.comboPProvinciasDescrip.setBounds(259, 196, 87, 20);
 		add(this.comboPProvinciasDescrip);
@@ -416,7 +418,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(varDpais);
 		varDpais.setVisible(false);
 
-		this.comboDPaisesDescrip = new JComboBox<String>(clientContr.getPaisContr().getlPaisesDescrip());
+		this.comboDPaisesDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getPaisContr().getlPaisesDescrip());
 //		this.comboDPaisesDescrip = new JTextField();
 		this.comboDPaisesDescrip.setBounds(88, 336, 87, 20);
 		add(this.comboDPaisesDescrip);
@@ -443,7 +446,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(this.varDDirProvincia);
 		this.varDDirProvincia.setVisible(false);
 
-		this.comboDirProvinciasDescrip = new JComboBox<String>(clientContr.getProvContr().getlProvinciasDescrip());
+		this.comboDirProvinciasDescrip = new JComboBox<String>(
+				this.clienteManager.getClienteController().getProvContr().getlProvinciasDescrip());
 //		this.comboDirProvinciasDescrip = new JTextField();
 		this.comboDirProvinciasDescrip.setBounds(259, 337, 86, 20);
 		add(this.comboDirProvinciasDescrip);
@@ -501,7 +505,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		add(varPFlineaAerea);
 		varPFlineaAerea.setVisible(false);
 
-		comboPFlineaAereaNombre = new JComboBox<String>(clientContr.getLaContr().getlLineasAereasNombre());
+		comboPFlineaAereaNombre = new JComboBox<String>(
+				this.clienteManager.getClienteController().getLaContr().getlLineasAereasNombre());
 //		comboPFlineaAereaNombre = new JTextField();
 		comboPFlineaAereaNombre.setBounds(253, 426, 87, 20);
 		add(comboPFlineaAereaNombre);
@@ -524,12 +529,12 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.setBounds(360, 15, 134, 23);
 		add(btnConsultar);
-		btnConsultar.addActionListener(clientContr);
+		btnConsultar.addActionListener(this);
 
 		btnLimpiar = new JButton("Cancelar");
 		btnLimpiar.setBounds(272, 484, 120, 23);
 		add(btnLimpiar);
-		btnLimpiar.addActionListener(clientContr);
+		btnLimpiar.addActionListener(this.clienteManager.getClienteController());
 		btnLimpiar.setVisible(false);
 
 		btnModificar = new JButton("Actualizar");
@@ -550,6 +555,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 			limpiar();
 			visibilidad(false);
 
+		} else {
+			textField_cuil.setEditable(false);
 		}
 	}
 
@@ -725,10 +732,11 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 	}
 
 	public void llenarDatos(ArrayList<String> lDatos) {
-		System.out.println(lDatos);
+//		System.out.println(lDatos);
 
 		visibilidad(true);
 		bordenegro();
+		textField_cuil.setEditable(false);
 
 //		textField_nroPasaporte.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 //		textField_numeroPasaFrec.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -922,6 +930,23 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 
 	@Override
 	public void actionPerformed(ActionEvent action) {
+
+		// 1 x btnConsultar
+
+		if (action.getSource() == btnConsultar) {
+
+			if (this.getTextField_cuil().getText().length() > 0) {
+				if (((LineBorder) (textField_cuil.getBorder())).getLineColor() == Color.BLACK) {
+					clienteManager.consultaClienteUnificado("SQL", getTextField_cuil().getText(), this);
+
+				} else {
+					cartelErrorIngresoDatos("CUIL: 11 digitos, que empiece con 20/23/27");
+				}
+			} else {
+				cartelErrorIngresoDatos("CUIL: Campo obligatorio");
+			}
+
+		}
 
 		if (action.getSource() == btnModificar) {
 
@@ -1197,8 +1222,8 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 																																												.getBorder()))
 																																														.getLineColor() == Color.BLACK) {
 
-																																											clientContr
-																																													.modificarCliente_porCUILGUI(
+																																											this.clienteManager
+																																													.modificarClienteUnificado(
 																																															"SQL",
 																																															textField_nombre
 																																																	.getText(),
@@ -1415,19 +1440,6 @@ public class ClienteUVista2 extends JPanel implements ActionListener, ItemListen
 
 			limpiar();
 			visibilidad(false);
-		}
-	}
-
-	public void otroActualizar() {
-		int rta = !(true) ? 0
-				: (JOptionPane.showConfirmDialog(null, "Quiere actualizar otro Cliente?", "Confirmacion",
-						JOptionPane.YES_NO_OPTION));
-
-		if (rta == JOptionPane.YES_OPTION) {
-
-			limpiar();
-			visibilidad(false);
-
 		}
 	}
 
